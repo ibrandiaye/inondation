@@ -31,7 +31,7 @@
     @endif
 
     <div class="card ">
-        <div class="card-header  text-center">LISTE D'ENREGISTREMENT DES Operateurs
+        <div class="card-header  text-center">LISTE D'ENREGISTREMENT DES OPERATEURS
              <div class="float-right">
                 <a href="{{ route('operateur.create') }}" class="btn btn-primary">Ajouter un opérateur</a>
             </div>

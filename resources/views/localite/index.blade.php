@@ -31,9 +31,9 @@
     @endif
 
     <div class="card ">
-        <div class="card-header  text-center">LISTE D'ENREGISTREMENT DES Localites
+        <div class="card-header  text-center">LISTE D'ENREGISTREMENT DES LOCALITES
              <div class="float-right">
-                <a href="{{ route('localite.create') }}" class="btn btn-primary">Ajouter un opérateur</a>
+                <a href="{{ route('localite.create') }}" class="btn btn-primary">Ajouter une localité</a>
             </div>
         </div>
             <div class="card-body">

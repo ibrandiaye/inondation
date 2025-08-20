@@ -29,7 +29,9 @@
                         <div class="text-center account-logo-box" style="background-color: white;">
                             <div class="mt-2 mb-2">
                                 <a href="index.html" class="text-success">
-                                    <span>                        <img src="{{ asset('logo/logo.png') }}" alt="" height="150">
+                                    <span>
+                                        {{-- <img src="{{ asset('logo/logo.png') }}" alt="" height="150"> --}}
+                                        <h6>La Direction de l’Aménagement du Territoire </h6>
                                     </span>
                                 </a>
                             </div>
@@ -66,7 +68,7 @@
                                     </div>
                                 </div>
 
-                              
+
 
                                 <div class="form-group account-btn text-center mt-2">
                                     <div class="col-12">

@@ -14,7 +14,7 @@
                     <li class="breadcrumb-item active"><a href="javascript: void(0);">Personne </a></li>
                 </ol>
             </div>
-            <h4 class="page-title">Enregistrer un Personne</h4>
+            <h4 class="page-title">Enregistrer une Personne</h4>
         </div>
     </div>
 </div>
@@ -33,7 +33,7 @@
         <form action="{{ route('personne.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
              <div class="card ">
-                        <div class="card-header text-center">FORMULAIRE D'ENREGISTREMENT D'UNE Personne</div>
+                        <div class="card-header text-center">FORMULAIRE D'ENREGISTREMENT D'UNE PERSONNE</div>
                             <div class="card-body">
                                 @if ($errors->any())
                                     <div class="alert alert-danger">

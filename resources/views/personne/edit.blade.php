@@ -12,10 +12,10 @@
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item"><a href="javascript: void(0);">Tableau de bord</a></li>
-                    <li class="breadcrumb-item active"><a href="javascript: void(0);">Departement </a></li>
+                    <li class="breadcrumb-item active"><a href="javascript: void(0);">Personne </a></li>
                 </ol>
             </div>
-            <h4 class="page-title">Enregistrer un Departement</h4>
+            <h4 class="page-title">Enregistrer une personne</h4>
         </div>
     </div>
 </div>
@@ -24,7 +24,7 @@
         {!! Form::model($personne, ['method'=>'PATCH','route'=>['personne.update', $personne->id],'enctype'=>'multipart/form-data']) !!}
             @csrf
              <div class="card ">
-                        <div class="card-header text-center">FORMULAIRE DE MODIFICATION D'une Personne</div>
+                        <div class="card-header text-center">FORMULAIRE DE MODIFICATION D'UNE PERSONNE</div>
                             <div class="card-body">
                                 @if ($errors->any())
                                     <div class="alert alert-danger">

@@ -13,7 +13,7 @@
                     <li class="breadcrumb-item active"><a href="javascript: void(0);">Personne </a></li>
                 </ol>
             </div>
-            <h4 class="page-title">Enregistrer un Personne</h4>
+            <h4 class="page-title">Enregistrer une Personne</h4>
         </div>
     </div>
 </div>
@@ -31,9 +31,9 @@
     @endif
 
     <div class="card ">
-        <div class="card-header  text-center">LISTE D'ENREGISTREMENT DES Personnes
+        <div class="card-header  text-center">LISTE D'ENREGISTREMENT DES PERSONNES
              <div class="float-right">
-                <a href="{{ route('personne.create') }}" class="btn btn-primary">Ajouter un personne</a>
+                <a href="{{ route('personne.create') }}" class="btn btn-primary">Ajouter une personne</a>
             </div>
         </div>
             <div class="card-body">
