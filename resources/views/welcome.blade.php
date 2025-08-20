@@ -99,12 +99,12 @@
             <div class="logo-box" style="background-color: white;">
                 <a href="index.html" class="logo text-center">
                     <span class="logo-lg">
-                        <img src="{{ asset('logo/logo.png') }}" alt="" height="80">
-                        <!-- <span class="logo-lg-text-light">Zircos</span> -->
+                      <!--   <img src="{{ asset('logo/logo.png') }}" alt="" height="80">
+                        <span class="logo-lg-text-light">Zircos</span> -->
                     </span>
                     <span class="logo-sm">
-                        <!-- <span class="logo-sm-text-dark">Z</span> -->
-                        <img src="{{ asset('logo/logo.png') }}" alt="" height="24">
+                        <!-- <span class="logo-sm-text-dark">Z</span>
+                        <img src="{{ asset('logo/logo.png') }}" alt="" height="24"> -->
                     </span>
                 </a>
             </div>
