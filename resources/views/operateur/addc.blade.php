@@ -32,6 +32,8 @@
         @endif
         <form action="{{ route('operateur.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+            <input type="hidden" name="localite_id" value="{{ $localite }}">
+
              <div class="card ">
                         <div class="card-header text-center">FORMULAIRE D'ENREGISTREMENT D'UN OPERATEUR</div>
                             <div class="card-body">
@@ -48,7 +50,7 @@
 
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                   {{--  <div class="col-lg-6">
                                         <label>Region</label>
                                         <select class="form-control" name="region_id" id="region_id" required="">
                                             <option value="">Selectionnez</option>
@@ -75,7 +77,7 @@
                                         <select class="form-control" name="commune_id" id="commune_id" >
 
                                         </select>
-                                    </div>
+                                    </div> --}}
 
 
                                     <div class="col-lg-6">
@@ -129,7 +131,7 @@
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>OP est-elle assurée ? (Oui ou Non)</label>
-                                            <select class="form-control" name="op" id="op" >
+                                            <select class="form-control" name="op" id="op" required>
                                                 <option value="">Selectionner</option>
                                                 <option value="oui" {{ old("op"=="oui" ? 'selected' : '') }}>Oui</option>
                                                 <option value="non" {{ old("op"=="non" ? 'selected' : '') }}>Non</option>
@@ -149,7 +151,12 @@
                                             <textarea class="form-control" name="commentaire" required> {{ old('commentaire') }} </textarea>
                                         </div>
                                     </div>
-
+                                     <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label> Document </label>
+                                            <input type="file" name="document"   class="form-control"  >
+                                        </div>
+                                    </div>
                                 </div>
 
 

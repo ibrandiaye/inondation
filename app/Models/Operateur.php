@@ -9,6 +9,7 @@ class Operateur extends Model
 {
     use HasFactory;
      protected $fillable = [
-        'localite','nature','cause','prenom','nom','tel','superficie','financement','op','cout','commentaire','commune_id'
+        'nature','cause','prenom','nom','tel','superficie','financement','op','cout','commentaire','commune_id',
+        'localite_id','doc'
     ];
 }

@@ -17,4 +17,7 @@ class Commune extends Model
     public function arrondissement(){
         return $this->belongsTo(Arrondissement::class);
     }
+    public function localites(){
+        return $this->hasMany(Localite::class);
+    }
 }

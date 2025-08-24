@@ -9,6 +9,11 @@ class Localite extends Model
 {
     use HasFactory;
      protected $fillable = [
-        'localite','nature','cause','mesure','attention','solution','besoin','commentaire','commune_id','mesureen'
+        'localite','nature','cause','mesure','attention','solution','besoin','commentaire','commune_id','mesureen','doc',
+        'etat'
     ];
+    public function commune()
+    {
+        return $this->belongsTo(Commune::class);
+    }
 }

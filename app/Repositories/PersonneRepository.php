@@ -13,11 +13,47 @@ class PersonneRepository extends RessourceRepository{
 
     public function get()
     {
+        $user = Auth::user();
+        if ($user->role=="sous_prefet") {
+            return  DB::table("personnes")
+            ->join("communes", "personnes.commune_id", "=", "communes.id")
+            ->join("departements","communes.departement_id","=","departements.id")
+            ->join("regions","departements.region_id","=","regions.id")
+            ->join("localites","personnes.localite_id","=","localites.id")
+            ->select("personnes.*", "communes.nom as commune", "departements.nom as departement", "regions.nom as region","communes.arrondissement_id",
+            "localites.localite")
+            ->where("communes.arrondissement_id",$user->arrondissement_id)
+            ->get();
+        }
+        elseif ($user->role=="prefet") {
+            return  DB::table("personnes")
+            ->join("communes", "personnes.commune_id", "=", "communes.id")
+            ->join("departements","communes.departement_id","=","departements.id")
+            ->join("regions","departements.region_id","=","regions.id")
+            ->join("localites","personnes.localite_id","=","localites.id")
+            ->select("personnes.*", "communes.nom as commune", "departements.nom as departement", "regions.nom as region","communes.arrondissement_id",
+            "localites.localite")
+            ->where("communes.departement_id",$user->departement_id)
+            ->get();
+        }
+        elseif ($user->role=="gouverneur") {
+            return  DB::table("personnes")
+            ->join("communes", "personnes.commune_id", "=", "communes.id")
+            ->join("departements","communes.departement_id","=","departements.id")
+            ->join("regions","departements.region_id","=","regions.id")
+            ->join("localites","personnes.localite_id","=","localites.id")
+            ->select("personnes.*", "communes.nom as commune", "departements.nom as departement", "regions.nom as region","communes.arrondissement_id",
+            "localites.localite")
+            ->where("departements.region_id",$user->region_id)
+            ->get();
+        }
         return DB::table("personnes")
         ->join("communes", "personnes.commune_id", "=", "communes.id")
         ->join("departements","communes.departement_id","=","departements.id")
         ->join("regions","departements.region_id","=","regions.id")
-        ->select("personnes.*", "communes.nom as commune", "departements.nom as departement", "regions.nom as region","communes.arrondissement_id")
+         ->join("localites","personnes.localite_id","=","localites.id")
+        ->select("personnes.*", "communes.nom as commune", "departements.nom as departement", "regions.nom as region","communes.arrondissement_id",
+        "localites.localite")
         ->get();
 
     }
@@ -50,6 +86,7 @@ class PersonneRepository extends RessourceRepository{
             ->count();
         }
     }
+
 
      public function countByRegion($id){
 

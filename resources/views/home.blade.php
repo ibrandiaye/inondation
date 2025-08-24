@@ -16,19 +16,49 @@
 
 <div class="row">
     <div class="col-xl-4 col-md-6">
-        <div class="card widget-box-one border border-success bg-soft-success">
+        <div class="card widget-box-one border border-warning bg-soft-warning">
             <div class="card-body">
                 <div class="float-right avatar-lg rounded-circle mt-3">
-                    <i class="mdi mdi-home font-30 widget-icon rounded-circle avatar-title text-success"></i>
+                    <i class="mdi mdi-home font-30 widget-icon rounded-circle avatar-title text-warning"></i>
                 </div>
                 <div class="wigdet-one-content">
                     <p class="m-0 text-uppercase font-weight-bold text-muted" title="User Today">Localite</p>
-                    <h2><span data-plugin="counterup" id="localite">{{ $nbLocalite  }}</span> <i class="mdi mdi-arrow-up text-success font-24"></i></h2>
+                    <h2><span data-plugin="counterup" id="localite">{{ $nbLocalite  }}</span> <i class="mdi mdi-arrow-up text-warning font-24"></i></h2>
                 </div>
             </div>
         </div>
     </div>
     <!-- end col -->
+    <div class="col-xl-4 col-md-6">
+        <div class="card widget-box-one border border-success bg-soft-success">
+            <div class="card-body">
+                <div class="float-right avatar-lg rounded-circle mt-3">
+                    <i class="mdi mdi-account-edit font-30 widget-icon rounded-circle avatar-title text-success"></i>
+                </div>
+                <div class="wigdet-one-content">
+                    <p class="m-0 text-uppercase font-weight-bold text-muted" title="User This Month">Localite Sinistre</p>
+                    <h2><span data-plugin="counterup" id="sinistre">{{ $nbLocalite -  $nonSinistre}} </span> <i class="mdi mdi-arrow-collapse text-success font-24"></i></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end col -->
+    <div class="col-xl-4 col-md-6">
+        <div class="card widget-box-one border border-danger bg-soft-danger">
+            <div class="card-body">
+                <div class="float-right avatar-lg rounded-circle mt-3">
+                    <i class="mdi mdi-account-switch font-30 widget-icon rounded-circle avatar-title text-danger"></i>
+                </div>
+                <div class="wigdet-one-content">
+                    <p class="m-0 text-uppercase font-weight-bold text-muted" title="Statistics">Sinistre Résolu</p>
+                    <h2><span data-plugin="counterup" id="nonsinistre">{{  $nonSinistre}}</span> <i class="mdi mdi-account-switch text-success font-24"></i></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end col -->
+
+
     <div class="col-xl-4 col-md-6">
         <div class="card widget-box-one border border-warning bg-soft-warning">
             <div class="card-body">
@@ -58,7 +88,19 @@
     </div>
     <!-- end col -->
 
-
+ <div class="col-xl-4 col-md-6">
+        <div class="card widget-box-one border border-danger bg-soft-danger">
+            <div class="card-body">
+                <div class="float-right avatar-lg rounded-circle mt-3">
+                    <i class="mdi mdi-cash font-30 widget-icon rounded-circle avatar-title text-danger"></i>
+                </div>
+                <div class="wigdet-one-content">
+                    <p class="m-0 text-uppercase font-weight-bold text-muted" title="Statistics">Coût des dégâts estimé en FCFA</p>
+                    <h2><span data-plugin="counterup" id="montant">{{  $sommeCout}}</span> </h2>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- end col -->
@@ -73,7 +115,6 @@
     @endphp
     <div class="card">
         <div class="card-header">
-            Carte ELectorale
         </div>
         <div class="card-body">
             <div class="row">
@@ -126,59 +167,65 @@
         </div>
     </div>
 </div>
-<div>
-    <div class="row">
-        <div class="col-md-8">
-            <canvas id="myChartbar"></canvas>
-        </div>
-        <div class="col-md-2">
-            <canvas id="myChart"></canvas>
-        </div>
 
-    </div>
-  </div>
-  {{--  @if ($user->role=="admin")
+
     <div class="row">
         <div class="col-12">
             <div class="card ">
-                <div class="card-header  text-center">LISTE D'ENREGISTREMENT DES Comptages</div>
-                    <div class="card-body">
+                <div class="card-header  text-center">Situation National</div>
+                <div class="card-body">
 
-                        <table id="datatable-buttons" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                            <thead>
-                                <tr>
-                                    <td>#</td>
-                                    <th>Departement</th>
-                                    <th>Localite</th>
-                                    <th>Operateur</th>
-                                    <th>Personne</th>
-                                    <th>Radiation</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            @foreach ($depts as $key=> $comptage)
-                                <tr>
-                                    <td>{{ $key+1 }}</td>
-                                    <td>{{ $comptage->nom }}</td>
-                                    <td>{{ $comptage->localite }}</td>
-                                    <td>{{ $comptage->operateur }}</td>
-                                    <td>{{ $comptage->personne }}</td>
-                                    <td>{{ $comptage->radiation }}</td>
+                    <table id="datatable-buttons" class="table table-striped table-bordered table-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead>
+                            <tr>
+                                @if ($user->role=="admin")<td>Region</td>@endif
+                                @if ( $user->role=="admin" || $user->role=="gouverneur")<th>Departement</th>@endif
+                                @if ($user->role=="admin" || $user->role=="gouverneur" || $user->role=="prefet")<th>Arrondissement</th>@endif
+                                <th>Commune</th>
+                                <th>Localite</th>
+                                <th>Type de Dégât</th>
+                                <th>Mesure prise</th>
+                                <th>Mesure envisagé</th>
+                                <th>Coût des dégâts <br> estimé en FCFA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($tabStats as $key=> $tabStat)
+                            <tr>
+                                @if ($user->role=="admin")<td>{{ $tabStat->region }}</td>@endif
+                                @if ( $user->role=="admin" || $user->role=="gouverneur")<td>{{ $tabStat->departement }}</td>@endif
+                                @if ( $user->role=="admin" || $user->role=="gouverneur" || $user->role=="prefet")<td>{{ $tabStat->arrondissement }}</td>@endif
+                                <td>{{ $tabStat->commune }}</td>
+                                <td>{{ $tabStat->localite->localite }}</td>
+                                <td>{{ $tabStat->localite->nature }}</td>
+                                <td>{{ $tabStat->localite->mesure }}</td>
+                                <td>{{ $tabStat->localite->mesureen }}</td>
+                                <td>{{ $tabStat->montant }}</td>
+
+                            </tr>
+                            @endforeach
+
+                        </tbody>
+                    </table>
 
 
-                                </tr>
-                                @endforeach
 
-                            </tbody>
-                        </table>
-
-
-
-                    </div>
                 </div>
             </div>
         </div>
-    @endif --}}
+    <div>
+     @if ($user->role=="admin")
+        <div class="row">
+            <div class="col-md-8">
+                <canvas id="myChartbar"></canvas>
+            </div>
+            <div class="col-md-2">
+                <canvas id="myChart"></canvas>
+            </div>
+
+        </div>
+
+    @endif
 @endsection
 @section("js")
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -191,6 +238,9 @@
     localite = 0;
     operateur = 0;
     personne = 0;
+    montant = 0;
+    sinistre = 0;
+    nonsinistre = 0;
     let chart;
     let myChartbar;
     $(document).ready(function() {
@@ -207,6 +257,10 @@
         $("#localite").empty();
         $("#operateur").empty();
         $("#personne").empty();
+        $("#montant").empty();
+        $("#sinistre").empty();
+        $("#nonsinistre").empty();
+        montant
         localite = 0;
         operateur = 0;
         personne =  0;
@@ -237,7 +291,9 @@
                 $("#localite").append(data.localite);
                 $("#operateur").append(data.operateur);
                 $("#personne").append(data.personne);
-
+                $("#montant").append(data.sommeCout);
+                 $("#sinistre").append(data.localite - data.nonSinistre);
+                $("#nonsinistre").append(data.nonSinistre);
 
                 localite = data.localite;
                 operateur = data.operateur;
@@ -261,6 +317,9 @@
         $("#localite").empty();
         $("#operateur").empty();
         $("#personne").empty();
+        $("#montant").empty();
+        $("#sinistre").empty();
+        $("#nonsinistre").empty();
 
         localite = 0;
         operateur = 0;
@@ -312,6 +371,9 @@
                 $("#localite").append(data.localite);
                 $("#operateur").append(data.operateur);
                 $("#personne").append(data.personne);
+                 $("#montant").append(data.sommeCout);
+                 $("#sinistre").append(data.localite - data.nonSinistre);
+                $("#nonsinistre").append(data.nonSinistre);
 
 
                 localite = data.localite;
@@ -332,6 +394,9 @@
         $("#localite").empty();
         $("#operateur").empty();
         $("#personne").empty();
+        $("#montant").empty();
+         $("#sinistre").empty();
+        $("#nonsinistre").empty();
 
         localite = 0;
         operateur = 0;
@@ -368,7 +433,9 @@
                 $("#localite").append(data.localite);
                 $("#operateur").append(data.operateur);
                 $("#personne").append(data.personne);
-
+                $("#montant").append(data.sommeCout);
+                $("#sinistre").append(data.localite - data.nonSinistre);
+                $("#nonsinistre").append(data.nonSinistre);
 
                 localite = data.localite;
                 operateur = data.operateur;
@@ -394,6 +461,9 @@
         $("#localite").empty();
         $("#operateur").empty();
         $("#personne").empty();
+        $("#montant").empty();
+         $("#sinistre").empty();
+        $("#nonsinistre").empty();
 
         localite = 0;
         operateur = 0;
@@ -409,7 +479,9 @@
                 $("#localite").append(data.localite);
                 $("#operateur").append(data.operateur);
                 $("#personne").append(data.personne);
-
+                $("#montant").append(data.sommeCout);
+                $("#sinistre").append(data.localite - data.nonSinistre);
+                $("#nonsinistre").append(data.nonSinistre);
 
                 localite = data.localite;
                 operateur = data.operateur;

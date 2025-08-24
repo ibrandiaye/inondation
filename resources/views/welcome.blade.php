@@ -137,8 +137,13 @@
                                 </a>
 
                             </li>
+ <li>
+                                <a href="{{ route('localite.index') }}" class="waves-effect waves-light">
+                                    <i class="mdi mdi-gauge"></i>
+                                    <span> Localite </span>
+                                </a>
 
-                            @if ($user->role=="admin" )
+                            </li>
                              <li>
                                 <a href="{{ route('operateur.index') }}" class="waves-effect waves-light">
                                     <i class="mdi mdi-gauge"></i>
@@ -153,13 +158,19 @@
                                 </a>
 
                             </li>
-                            <li>
-                                <a href="{{ route('localite.index') }}" class="waves-effect waves-light">
+
+                             <li>
+                                <a data-toggle="modal" data-target="#exampleModalform2date"  class="waves-effect waves-light">
                                     <i class="mdi mdi-gauge"></i>
-                                    <span> Localite </span>
+                                    <span> Rapport </span>
                                 </a>
 
                             </li>
+
+
+
+                            @if ($user->role=="admin" )
+
                             <li>
                                 <a href="javascript: void(0);" class="waves-effect waves-light">
                                     <i class="mdi mdi-google-pages"></i>
@@ -202,6 +213,17 @@
                                 <ul class="nav-second-level" aria-expanded="false">
                                     <li><a href="{{ route('commune.create') }}">Ajouter Commune</a></li>
                                     <li><a href="{{ route('commune.index') }}">Liste des Commune</a></li>
+                                </ul>
+                            </li>
+                             <li>
+                                <a href="javascript: void(0);" class="waves-effect waves-light">
+                                    <i class="mdi mdi-user"></i>
+                                    <span> Utilisateur </span>
+                                    <span class="menu-arrow"></span>
+                                </a>
+                                <ul class="nav-second-level" aria-expanded="false">
+                                    <li><a href="{{ route('user.create') }}">Ajouter Commune</a></li>
+                                    <li><a href="{{ route('user.index') }}">Liste des Commune</a></li>
                                 </ul>
                             </li>
 
@@ -263,7 +285,54 @@
             <!-- end content -->
 
 
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModalform2date" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Generer Rapport</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                             @if ($user->role=="admin")
+                                                <form action="{{ route('message.national') }}" method="POST">
+                                             @elseif($user->role=="gouverneur")
+                                                <form action="{{ route('message.region') }}" method="POST">
+                                            @elseif($user->role=="prefet")
+                                                <form action="{{ route('message.departement') }}" method="POST">
+                                            @elseif($user->role=="sous_prefet")
+                                                <form action="{{ route('message.arrondissement') }}" method="POST">
+                                            @endif
+                                                @csrf
+                                            <div class="modal-body">
 
+                                                <input type="hidden" name="id" value="{{$user->id}}">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label for="field-3" class="control-label">Date Debut</label>
+                                                            <input type="date" class="form-control" id="field-3" placeholder="Mot "  name="start">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group no-margin">
+                                                            <label for="field-7" class="control-label">Date Fin</label>
+                                                            <input type="date" name="end" class="form-control" id="field-3">                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                                                <button type="submint" class="btn btn-primary">Valider</button>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
             <!-- Footer Start -->
             <footer class="footer">
                 <div class="container-fluid">

@@ -118,7 +118,12 @@
                                             <textarea class="form-control" name="commentaire" required> {{ $operateur->commentaire}} </textarea>
                                         </div>
                                     </div>
-
+                                     <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label> Document </label>
+                                            <input type="file" name="document"   class="form-control"  >
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
                                     <center>

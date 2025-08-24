@@ -41,6 +41,7 @@
                 <table id="datatable-buttons" class="table table-striped table-bordered table-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                     <thead>
                         <tr>
+                            <th>Operation</th>
                             <th>Région </th>
                             <th>Département</th>
                             <th>Arrondissement </th>
@@ -60,6 +61,18 @@
                     <tbody>
                     @foreach ($localites as $localite)
                         <tr>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a class="btn btn-outline-primary btn-sm" title="Ajouter une personne"
+                                    href="{{ route('ajouter.personne', ['localite'=>$localite->id]) }}">
+                                        <i class="fas fa-user-plus"></i>
+                                    </a>
+                                    <a class="btn btn-outline-primary btn-sm" title="Ajouter un opérateur"
+                                    href="{{ route('ajouter.operateur', ['localite'=>$localite->id]) }}">
+                                        <i class="fas fa-user-cog"></i>
+                                    </a>
+                                </div>
+                            </td>
                             <td>{{ $localite->region }}</td>
                             <td>{{ $localite->departement }}</td>
                             <td>{{ $localite->arrondissement }} </td>

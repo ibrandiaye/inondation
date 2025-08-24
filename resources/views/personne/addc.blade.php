@@ -32,6 +32,8 @@
         @endif
         <form action="{{ route('personne.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+            <input type="hidden" name="localite_id" value="{{ $localite }}">
+
              <div class="card ">
                         <div class="card-header text-center">FORMULAIRE D'ENREGISTREMENT D'UNE PERSONNE</div>
                             <div class="card-body">
@@ -47,8 +49,8 @@
                                 <div class="row" id="rtse">
 
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-6">
+                               <div class="row">
+                                     {{-- <div class="col-lg-6">
                                         <label>Region</label>
                                         <select class="form-control" name="region_id" id="region_id" required="">
                                             <option value="">Selectionnez</option>
@@ -83,7 +85,7 @@
                                             <label>Localité</label>
                                             <input type="text" name="localite"  value="{{ old('localite') }}" class="form-control"  required>
                                         </div>
-                                    </div>
+                                    </div>--}}
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Nature du bien impacté</label>
@@ -107,6 +109,25 @@
                                             <label>Nom</label>
                                             <input type="text" name="nom"  value="{{ old('nom') }}" class="form-control"  required>
                                         </div>
+                                    </div>
+                                     <div class="col-lg-6">
+                                        <label>Sexe</label>
+                                        <select class="form-control" name="genre" id="genre" required="">
+                                           <option value="">Selectionnez</option>
+                                            <option value="homme"  {{ old('genre')=="homme" ? 'selected' :'' }}>Homme</option>
+                                           <option value="femme" {{ old('genre')=="femme" ? 'selected' :'' }}>Femme</option>
+
+
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label>Décès</label>
+                                        <select class="form-control" name="deces" id="deces" required="">
+                                           <option value="">Selectionnez</option>
+                                           <option value="oui" {{ old('deces')=="oui" ? 'selected' :'' }}>Oui</option>
+                                           <option value="non" {{ old('deces')=="non" ? 'selected' :'' }}>Non </option>
+
+                                        </select>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
@@ -133,7 +154,12 @@
                                             <textarea class="form-control" name="commentaire" required> {{ old('commentaire') }} </textarea>
                                         </div>
                                     </div>
-
+                                     <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label> Document </label>
+                                            <input type="file" name="document"   class="form-control"  >
+                                        </div>
+                                    </div>
                                 </div>
 
 

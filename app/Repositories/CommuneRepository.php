@@ -20,6 +20,11 @@ class CommuneRepository extends RessourceRepository{
         ->where('id',$id)
         ->first();
     }
+    public function getByArrondissementWithRelation($id){
+        return Commune::with(['localites'])
+        ->where('arrondissement_id',$id)
+        ->get();
+    }
     public function getByDepartement($departement){
         return DB::table("communes")
         ->where("departement_id",$departement)
@@ -39,6 +44,9 @@ public function getByArrondissement($id)
 {
     return DB::table("communes")->where("arrondissement_id",$id)->get();
 }
+
+
+
 public function getOneCommuneWithArrondissementdepartementAndRegion($id){
     return Commune::with(['departement','departement.region','arrondissement'])
     ->where('id',$id)

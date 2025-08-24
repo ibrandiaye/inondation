@@ -13,6 +13,34 @@ class LocaliteRepository extends RessourceRepository{
 
     public function get()
     {
+         $user = Auth::user();
+         if ($user->role=="sous_prefet") {
+            return  DB::table("localites")
+            ->join("communes", "localites.commune_id", "=", "communes.id")
+            ->join("departements","communes.departement_id","=","departements.id")
+            ->join("regions","departements.region_id","=","regions.id")
+            ->select("localites.*", "communes.nom as commune", "departements.nom as departement", "regions.nom as region","communes.arrondissement_id")
+            ->where("communes.arrondissement_id",$user->arrondissement_id)
+            ->get();
+        }
+        elseif ($user->role=="prefet") {
+            return  DB::table("localites")
+            ->join("communes", "localites.commune_id", "=", "communes.id")
+            ->join("departements","communes.departement_id","=","departements.id")
+            ->join("regions","departements.region_id","=","regions.id")
+            ->select("localites.*", "communes.nom as commune", "departements.nom as departement", "regions.nom as region","communes.arrondissement_id")
+            ->where("communes.departement_id",$user->departement_id)
+            ->get();
+        }
+        elseif ($user->role=="gouverneur") {
+            return  DB::table("localites")
+           ->join("communes", "localites.commune_id", "=", "communes.id")
+            ->join("departements","communes.departement_id","=","departements.id")
+            ->join("regions","departements.region_id","=","regions.id")
+            ->select("localites.*", "communes.nom as commune", "departements.nom as departement", "regions.nom as region","communes.arrondissement_id")
+            ->where("departements.region_id",$user->region_id)
+            ->get();
+        }
         return DB::table("localites")
         ->join("communes", "localites.commune_id", "=", "communes.id")
         ->join("departements","communes.departement_id","=","departements.id")
@@ -22,6 +50,7 @@ class LocaliteRepository extends RessourceRepository{
 
 
     }
+
 
      public function countLocalite(){
          $user = Auth::user();
@@ -87,5 +116,88 @@ class LocaliteRepository extends RessourceRepository{
         ->count();
 
     }
+
+    public function getOnlyById($id){
+
+        return  DB::table("localites")
+        ->where("id",$id)
+        ->first();
+
+    }
+
+
+ public function countLocaliteNonSinistre(){
+         $user = Auth::user();
+        if($user->role=="admin" || $user->role=='superviseur' || $user->role=='correcteur')
+        {
+            return  DB::table("localites")
+            ->where("etat", "sinistre resolu")
+            ->count();
+        }
+        elseif ($user->role=="sous_prefet") {
+            return  DB::table("localites")
+            ->join("communes","localites.commune_id","=","communes.id")
+            ->where("communes.arrondissement_id",$user->arrondissement_id)
+            ->where("etat", "sinistre resolu")
+            ->count();
+        }
+        elseif ($user->role=="prefet") {
+            return  DB::table("localites")
+            ->join("communes","localites.commune_id","=","communes.id")
+            ->where("communes.departement_id",$user->departement_id)
+            ->where("etat", "sinistre resolu")
+            ->count();
+        }
+        elseif ($user->role=="gouverneur") {
+            return  DB::table("localites")
+            ->join("communes","localites.commune_id","=","communes.id")
+            ->join("departements","communes.departement_id","=","departements.id")
+
+            ->where("departements.region_id",$user->region_id)
+            ->where("etat", "sinistre resolu")
+            ->count();
+        }
+    }
+
+     public function countByRegionNonSinistre($id){
+
+        return  DB::table("localites")
+        ->join("communes","localites.commune_id","=","communes.id")
+        ->join('departements',"communes.departement_id","=","departements.id")
+        ->where("departements.region_id",$id)
+         ->where("etat", "sinistre resolu")
+        ->count();
+
+    }
+     public function countByDepartementNonSinistre($id){
+
+            return  DB::table("localites")
+            ->join("communes","localites.commune_id","=","communes.id")
+            ->where("communes.departement_id",$id)
+             ->where("etat", "sinistre resolu")
+            ->count();
+
+
+    }
+
+     public function countByArrondissementNonSinistre($id){
+        return  DB::table("localites")
+        ->join("communes","localites.commune_id","=","communes.id")
+
+        ->where("communes.arrondissement_id",$id)
+         ->where("etat", "sinistre resolu")
+        ->count();
+
+
+    }
+    public function countByCommuneNonSinistre($id){
+
+        return  DB::table("localites")
+        ->where("commune_id",$id)
+         ->where("etat", "sinistre resolu")
+        ->count();
+
+    }
+
 
 }

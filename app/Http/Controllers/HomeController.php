@@ -56,27 +56,102 @@ class HomeController extends Controller
         $departements =[];
         $arrondissements =[];
         $communes =[];
+        $tabStats = [];
         $user = Auth::user();
         $nbLocalite = $this->localiteRepository->countLocalite();
         $nbOperateur = $this->operateurRepository->countOperateur();
         $nbPersonne = $this->personneRepository->countPersonne();
+        $nonSinistre = $this->localiteRepository->countLocaliteNonSinistre();
+        $sommeCout = $this->operateurRepository->sommeCout();
+
+        $sommeByLocalite = $this->operateurRepository->sommeMontantParLocalite();
+        //dd($sommeByLocalite);
+        $tabStats = $this->operateurRepository->sommeMontantParLocalite();
 
         if($user->role=="admin" )
         {
-            $regions = $this->regionRepository->getAll();
+            $regions = $this->regionRepository->getALLWithRelation();
+            foreach ($regions as $key => $region) {
+                foreach ($region->departements as $keyr => $departement) {
+
+                    foreach ($departement->arrondissements as $keya => $arrondissement) {
+                        foreach ($arrondissement->communes as $keyc => $commune) {
+                            foreach ($commune->localites as $keyl => $localite) {
+                                foreach ($tabStats as $keytab => $tabStat) {
+                                    if($tabStat->id == $localite->id)
+                                    {
+                                        $regions[$key]->departements[$keyr]->arrondissements[$keya]->communes[$keyc]->localites[$keyl]->{"montant"} = $tabStat->montant;
+                                        $tabStats[$keytab]->{"localite"} = $localite;
+                                        $tabStats[$keytab]->{"region"} = $region->nom;
+                                        $tabStats[$keytab]->{"departement"} = $departement->nom;
+                                          $tabStats[$keytab]->{"arrondissement"} = $arrondissement->nom;
+                                        $tabStats[$keytab]->{"commune"} = $commune->nom;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
         }
         else if($user->role=="gouverneur")
         {
-            $departements = $this->departementRepository->getByRegion($user->region_id);
+            $departements = $this->departementRepository->getByRegionWithRelation($user->region_id);
+             foreach ($departements as $keyr => $departement) {
+
+                    foreach ($departement->arrondissements as $keya => $arrondissement) {
+                        foreach ($arrondissement->communes as $keyc => $commune) {
+                            foreach ($commune->localites as $keyl => $localite) {
+                                foreach ($tabStats as $keytab => $tabStat) {
+                                    if($tabStat->id == $localite->id)
+                                    {
+                                        $departements[$keyr]->arrondissements[$keya]->communes[$keyc]->localites[$keyl]->{"montant"} = $tabStat->montant;
+                                        $tabStats[$keytab]->{"localite"} = $localite;
+                                        $tabStats[$keytab]->{"departement"} = $departement->nom;
+                                          $tabStats[$keytab]->{"arrondissement"} = $arrondissement->nom;
+                                        $tabStats[$keytab]->{"commune"} = $commune->nom;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
         }
         else if($user->role=="prefet")
         {
-            $arrondissements = $this->arrondissementRepository->getByDepartement($user->departement_id);
+            $arrondissements = $this->arrondissementRepository->getByDepartementWithRelation($user->departement_id);
+            foreach ($arrondissements as $keya => $arrondissement) {
+                foreach ($arrondissement->communes as $keyc => $commune) {
+                    foreach ($commune->localites as $keyl => $localite) {
+                        foreach ($tabStats as $keytab => $tabStat) {
+                            if($tabStat->id == $localite->id)
+                            {
+                                $arrondissements[$keya]->communes[$keyc]->localites[$keyl]->{"montant"} = $tabStat->montant;
+                                $tabStats[$keytab]->{"localite"} = $localite;
+                                $tabStats[$keytab]->{"arrondissement"} = $arrondissement->nom;
+                                $tabStats[$keytab]->{"commune"} = $commune->nom;
+                            }
+                        }
+                    }
+                }
+            }
         }
         else if($user->role=="sous_prefet")
         {
-            $communes = $this->communeRepository->getByArrondissement($user->arrondissement_id);
+            $communes = $this->communeRepository->getByArrondissementWithRelation($user->arrondissement_id);
+            foreach ($communes as $keyc => $commune) {
+                    foreach ($commune->localites as $keyl => $localite) {
+                        foreach ($tabStats as $keytab => $tabStat) {
+                            if($tabStat->id == $localite->id)
+                            {
+                                $communes[$keyc]->localites[$keyl]->{"montant"} = $tabStat->montant;
+                                $tabStats[$keytab]->{"localite"} = $localite;
+                                $tabStats[$keytab]->{"commune"} = $commune->nom;
+                            }
+                        }
+                    }
+                }
 
         }
         if($user->role=="admin" )
@@ -88,10 +163,11 @@ class HomeController extends Controller
            $situationPasDepartements=[];
            $depts=[];
         }
-      // dd($depts);
+       //dd($tabStats);
 
         return view('home',compact("regions",
-    "departements","arrondissements","communes","nbLocalite","nbOperateur","nbPersonne"));
+    "departements","arrondissements","communes","nbLocalite"
+        ,"nbOperateur","nbPersonne","sommeCout","tabStats","nonSinistre"));
     }
 
     public function statByCommune($commune)
@@ -106,8 +182,10 @@ class HomeController extends Controller
         $operateur = $this->operateurRepository->countByRegion($id);
 
         $personne = $this->personneRepository->countByRegion($id);
-
-        $data = array('localite'=>$localite,'operateur'=>$operateur,'personne'=>$personne);
+        $sommeCout = $this->operateurRepository->sommeCoutRegion($id);
+        $nonSinistre = $this->localiteRepository->countByRegionNonSinistre($id);
+        $data = array('localite'=>$localite,'operateur'=>$operateur,
+        'sommeCout'=>$sommeCout,'personne'=>$personne,'nonSinistre'=>$nonSinistre);
         return response()->json($data);
 
     }
@@ -117,8 +195,10 @@ class HomeController extends Controller
         $operateur = $this->operateurRepository->countByDepartement($id);
 
         $personne = $this->personneRepository->countByDepartement($id);
-
-        $data = array('localite'=>$localite,'operateur'=>$operateur,'personne'=>$personne);
+         $sommeCout = $this->operateurRepository->sommeCoutDepartement($id);
+         $nonSinistre = $this->localiteRepository->countByDepartementNonSinistre($id);
+        $data = array('localite'=>$localite,'operateur'=>$operateur,
+        'sommeCout'=>$sommeCout,'personne'=>$personne,'nonSinistre'=>$nonSinistre);
         return response()->json($data);
 
     }
@@ -128,8 +208,10 @@ class HomeController extends Controller
         $operateur = $this->operateurRepository->countByArrondissement($id);
 
         $personne = $this->personneRepository->countByArrondissement($id);
-
-        $data = array('localite'=>$localite,'operateur'=>$operateur,'personne'=>$personne);
+        $sommeCout = $this->operateurRepository->sommeCoutArrondissement($id);
+        $nonSinistre = $this->localiteRepository->countByArrondissementNonSinistre($id);
+        $data = array('localite'=>$localite,'operateur'=>$operateur,'personne'=>$personne,
+        'sommeCout'=>$sommeCout,'nonSinistre'=>$nonSinistre);
         return response()->json($data);
 
     }
@@ -139,297 +221,120 @@ class HomeController extends Controller
         $operateur = $this->operateurRepository->countByCommune($id);
 
         $personne = $this->personneRepository->countByCommune($id);
-
-        $data = array('localite'=>$localite,'operateur'=>$operateur,'personne'=>$personne);
+        $sommeCout = $this->operateurRepository->sommeCoutCommune($id);
+        $nonSinistre = $this->localiteRepository->countByCommuneNonSinistre($id);
+        $data = array('localite'=>$localite,'operateur'=>$operateur,'personne'=>$personne,
+    'sommeCout'=>$sommeCout,'nonSinistre'=>$nonSinistre);
         return response()->json($data);
 
 
     }
 
-    public function messageByArrondissement($id,$date)
+    public function messageByArrondissement(Request $request)
     {
-        $communes = $this->communeRepository->getByArrondissement($id);
-        $situationSemaine = $this->comptageRepository->situationActuelleByArrondissement($id,$date);
-        $situationAncienne = $this->comptageRepository->situationAncieneByArrondissement($id,$date);
-        $data=array();
-        $index = 0;
-        foreach ($communes as $key => $value) {
-           $ligne = new \stdClass;
-           $ligne->insant = 0;
-           $ligne->inssem = 0;
-           $ligne->cumulins = 0;
-
-           $ligne->modant = 0;
-           $ligne->modsem = 0;
-           $ligne->cumulmod = 0;
-
-           $ligne->chanant = 0;
-           $ligne->chansem = 0;
-           $ligne->cumulchan = 0;
-
-           $ligne->radant = 0;
-           $ligne->radsem = 0;
-           $ligne->cumulrad = 0;
-
-           $ligne->commune = $value->nom;
-
-           foreach ($situationAncienne as $key => $situAnc) {
-                if($situAnc->nom==$value->nom)
-                {
-                    $ligne->insant = $situAnc->localite;
-                    $ligne->modant = $situAnc->operateur;
-                    $ligne->chanant = $situAnc->personne;
-                    $ligne->radant = $situAnc->radiation;
-                    $ligne->cumulins =  $ligne->cumulins + $situAnc->localite;
-                    $ligne->cumulmod =  $ligne->cumulmod + $situAnc->operateur;
-                    $ligne->cumulchan =  $ligne->cumulchan + $situAnc->personne;
-                    $ligne->cumulrad =  $ligne->cumulrad + $situAnc->radiation;
-
-
+        $user = Auth::user();
+       // $communes = $this->communeRepository->getByArrondissement($user->arrondissement_id);
+        $arrondissement = $this->arrondissementRepository->getOneArrondissementWithdepartementAndRegion($user->arrondissement_id);
+        $communes = $this->communeRepository->getByArrondissementWithRelation($user->arrondissement_id);
+        $tabStats=[];
+        $tabStats = $this->operateurRepository->sommeMontantParLocaliteDate($user,$request->start,$request->end);
+        foreach ($communes as $keyc => $commune) {
+                foreach ($commune->localites as $keyl => $localite) {
+                    foreach ($tabStats as $keytab => $tabStat) {
+                        if($tabStat->id == $localite->id)
+                        {
+                            $communes[$keyc]->localites[$keyl]->{"montant"} = $tabStat->montant;
+                            $tabStats[$keytab]->{"localite"} = $localite;
+                            $tabStats[$keytab]->{"commune"} = $commune->nom;
+                        }
+                    }
                 }
-
             }
-            foreach ($situationSemaine as $key => $situSem) {
-                if($situSem->nom==$value->nom)
-                {
-                    $ligne->inssem = $situSem->localite;
-                    $ligne->modsem = $situSem->operateur;
-                    $ligne->chansem = $situSem->personne;
-                    $ligne->radsem = $situSem->radiation;
-                    $ligne->cumulins =  $ligne->cumulins + $situSem->localite;
-                    $ligne->cumulmod =  $ligne->cumulmod + $situSem->operateur;
-                    $ligne->cumulchan =  $ligne->cumulchan + $situSem->personne;
-                    $ligne->cumulrad =  $ligne->cumulrad + $situSem->radiation;
 
-
-                }
-
-            }
-            $data[]=$ligne;
-        }
-        //dd($data);
-      //  return view("situation.par_arrondissement",compact("data"));
-      $arrondissement = $this->arrondissementRepository->getOneArrondissementWithdepartementAndRegion($id);
-      $semaine = $this->semaineRepository->getOneByDebut($date);
-
-      return view("situation.impression_arrondissement",compact("data","arrondissement","semaine"));
+            $debut = $request->start;
+            $fin = $request->end;
+      return view("situation.impression_arrondissement",compact("tabStats","arrondissement",
+    "debut","fin"));
 
 
     }
 
-    public function messageByDepartement($id,$date)
+    public function messageByDepartement(Request $request)
     {
-        $departement = $this->departementRepository->getOneWithRelation($id);
-        $situationSemaine = $this->comptageRepository->situationActuelleByDepartement($id,$date);
-        $situationAncienne = $this->comptageRepository->situationAncieneByDepartement($id,$date);
-       $semaine = $this->semaineRepository->getOneByDebut($date);
-        $data=array($situationSemaine,$situationAncienne);
-        $index = 0;
-     //  dd($situationSemaine,$situationSemaine,$departement);
-        foreach ($departement->arrondissements as $keya => $arrondissement) {
-            foreach ($arrondissement->communes as $keyc => $commune) {
-                $ligne = new \stdClass;
-                $ligne->insant = 0;
-                $ligne->inssem = 0;
-                $ligne->cumulins = 0;
-
-                $ligne->modant = 0;
-                $ligne->modsem = 0;
-                $ligne->cumulmod = 0;
-
-                $ligne->chanant = 0;
-                $ligne->chansem = 0;
-                $ligne->cumulchan = 0;
-
-                $ligne->radant = 0;
-                $ligne->radsem = 0;
-                $ligne->cumulrad = 0;
-
-                $ligne->commune = $commune->nom;
-
-                foreach ($situationAncienne as $keysa => $situAnc) {
-                    if($situAnc->nom==$commune->nom)
-                    {
-                        $ligne->insant = $situAnc->localite;
-                        $ligne->modant = $situAnc->operateur;
-                        $ligne->chanant = $situAnc->personne;
-                        $ligne->radant = $situAnc->radiation;
-                        $ligne->cumulins =  $ligne->cumulins + $situAnc->localite;
-                        $ligne->cumulmod =  $ligne->cumulmod + $situAnc->operateur;
-                        $ligne->cumulchan =  $ligne->cumulchan + $situAnc->personne;
-                        $ligne->cumulrad =  $ligne->cumulrad + $situAnc->radiation;
-
-
+         $user = Auth::user();
+        $departement = $this->departementRepository->getOneWithRelation($user->departement_id);
+        $arrondissements = $this->arrondissementRepository->getByDepartementWithRelation($user->departement_id);
+         $tabStats=[];
+        $tabStats = $this->operateurRepository->sommeMontantParLocaliteDate($user,$request->start,$request->end);
+        foreach ($arrondissements as $keya => $arrondissement) {
+                foreach ($arrondissement->communes as $keyc => $commune) {
+                    foreach ($commune->localites as $keyl => $localite) {
+                        foreach ($tabStats as $keytab => $tabStat) {
+                            if($tabStat->id == $localite->id)
+                            {
+                                $arrondissements[$keya]->communes[$keyc]->localites[$keyl]->{"montant"} = $tabStat->montant;
+                                $tabStats[$keytab]->{"localite"} = $localite;
+                                $tabStats[$keytab]->{"arrondissement"} = $arrondissement->nom;
+                                $tabStats[$keytab]->{"commune"} = $commune->nom;
+                            }
+                        }
                     }
-
                 }
-                foreach ($situationSemaine as $keyss => $situSem) {
-                    if($situSem->nom==$commune->nom)
-                    {
-                        $ligne->inssem = $situSem->localite;
-                        $ligne->modsem = $situSem->operateur;
-                        $ligne->chansem = $situSem->personne;
-                        $ligne->radsem = $situSem->radiation;
-                        $ligne->cumulins =  $ligne->cumulins + $situSem->localite;
-                        $ligne->cumulmod =  $ligne->cumulmod + $situSem->operateur;
-                        $ligne->cumulchan =  $ligne->cumulchan + $situSem->personne;
-                        $ligne->cumulrad =  $ligne->cumulrad + $situSem->radiation;
-
-
-                    }
-
-                }
-               // $data[]=$ligne;
-                $departement->arrondissements[$keya]->communes[$keyc]->data = $ligne;
             }
-
-        }
-        //dd($departement);
-        return view("situation.impression_departement",compact("departement","semaine"));
+             $debut = $request->start;
+            $fin = $request->end;
+        return view("situation.impression_departement",compact("departement","tabStats",
+    "debut","fin"));
 
     }
 
-    public function messageByRegion($id,$date)
+    public function messageByRegion(Request $request)
     {
-        $region = $this->regionRepository->getOneWithRelation($id);
-        $situationSemaine = $this->comptageRepository->situationActuelleByRegion($id,$date);
-        $situationAncienne = $this->comptageRepository->situationAncieneByRegion($id,$date);
-       $semaine = $this->semaineRepository->getOneByDebut($date);
-        $data=array($situationSemaine,$situationAncienne);
-        $index = 0;
-     //  dd($situationSemaine,$situationSemaine,$departement);
-     foreach ($region->departements as $keyd => $departement) {
-        foreach ($departement->arrondissements as $keya => $arrondissement) {
-            foreach ($arrondissement->communes as $keyc => $commune) {
-                $ligne = new \stdClass;
-                $ligne->insant = 0;
-                $ligne->inssem = 0;
-                $ligne->cumulins = 0;
-
-                $ligne->modant = 0;
-                $ligne->modsem = 0;
-                $ligne->cumulmod = 0;
-
-                $ligne->chanant = 0;
-                $ligne->chansem = 0;
-                $ligne->cumulchan = 0;
-
-                $ligne->radant = 0;
-                $ligne->radsem = 0;
-                $ligne->cumulrad = 0;
-
-                $ligne->commune = $commune->nom;
-
-                foreach ($situationAncienne as $keysa => $situAnc) {
-                    if($situAnc->nom==$commune->nom)
-                    {
-                        $ligne->insant = $situAnc->localite;
-                        $ligne->modant = $situAnc->operateur;
-                        $ligne->chanant = $situAnc->personne;
-                        $ligne->radant = $situAnc->radiation;
-                        $ligne->cumulins =  $ligne->cumulins + $situAnc->localite;
-                        $ligne->cumulmod =  $ligne->cumulmod + $situAnc->operateur;
-                        $ligne->cumulchan =  $ligne->cumulchan + $situAnc->personne;
-                        $ligne->cumulrad =  $ligne->cumulrad + $situAnc->radiation;
+        $user = Auth::user();
+        $region = $this->regionRepository->getOneWithRelation($user->region_id);
 
 
+        $departements = $this->departementRepository->getByRegionWithRelation($user->region_id);
+         $tabStats=[];
+        $tabStats = $this->operateurRepository->sommeMontantParLocaliteDate($user,$request->start,$request->end);
+        foreach ($departements as $keyr => $departement) {
+
+            foreach ($departement->arrondissements as $keya => $arrondissement) {
+                foreach ($arrondissement->communes as $keyc => $commune) {
+                    foreach ($commune->localites as $keyl => $localite) {
+                        foreach ($tabStats as $keytab => $tabStat) {
+                            if($tabStat->id == $localite->id)
+                            {
+                                $departements[$keyr]->arrondissements[$keya]->communes[$keyc]->localites[$keyl]->{"montant"} = $tabStat->montant;
+                                $tabStats[$keytab]->{"localite"} = $localite;
+                                $tabStats[$keytab]->{"departement"} = $departement->nom;
+                                $tabStats[$keytab]->{"arrondissement"} = $arrondissement->nom;
+                                $tabStats[$keytab]->{"commune"} = $commune->nom;
+                            }
+                        }
                     }
-
                 }
-                foreach ($situationSemaine as $keyss => $situSem) {
-                    if($situSem->nom==$commune->nom)
-                    {
-                        $ligne->inssem = $situSem->localite;
-                        $ligne->modsem = $situSem->operateur;
-                        $ligne->chansem = $situSem->personne;
-                        $ligne->radsem = $situSem->radiation;
-                        $ligne->cumulins =  $ligne->cumulins + $situSem->localite;
-                        $ligne->cumulmod =  $ligne->cumulmod + $situSem->operateur;
-                        $ligne->cumulchan =  $ligne->cumulchan + $situSem->personne;
-                        $ligne->cumulrad =  $ligne->cumulrad + $situSem->radiation;
-
-
-                    }
-
-                }
-               // $data[]=$ligne;
-                $region->departements[$keyd]->arrondissements[$keya]->communes[$keyc]->data = $ligne;
             }
-
         }
-     }
-
-        //dd($departement);
-        return view("situation.impression_region",compact("region","semaine"));
+         $debut = $request->start;
+        $fin = $request->end;
+        return view("situation.impression_region",compact("region","tabStats",
+    "debut","fin"));
 
     }
 
-    public function messageByNational($date)
+    public function messageByNational(Request $request)
     {
+         $user = Auth::user();
         $regions = $this->regionRepository->getALLWithRelation();
-        $situationSemaine = $this->comptageRepository->situationActuelleByNational($date);
-        $situationAncienne = $this->comptageRepository->situationAncieneByNational($date);
-       $semaine = $this->semaineRepository->getOneByDebut($date);
-        $data=array($situationSemaine,$situationAncienne);
-        $index = 0;
+
+
      //  dd($situationSemaine,$situationSemaine,$departement);
      foreach ($regions as $keyr => $region) {
         foreach ($region->departements as $keyd => $departement) {
             foreach ($departement->arrondissements as $keya => $arrondissement) {
                 foreach ($arrondissement->communes as $keyc => $commune) {
-                    $ligne = new \stdClass;
-                    $ligne->insant = 0;
-                    $ligne->inssem = 0;
-                    $ligne->cumulins = 0;
-
-                    $ligne->modant = 0;
-                    $ligne->modsem = 0;
-                    $ligne->cumulmod = 0;
-
-                    $ligne->chanant = 0;
-                    $ligne->chansem = 0;
-                    $ligne->cumulchan = 0;
-
-                    $ligne->radant = 0;
-                    $ligne->radsem = 0;
-                    $ligne->cumulrad = 0;
-
-                    $ligne->commune = $commune->nom;
-
-                    foreach ($situationAncienne as $keysa => $situAnc) {
-                        if($situAnc->nom==$commune->nom)
-                        {
-                            $ligne->insant = $situAnc->localite;
-                            $ligne->modant = $situAnc->operateur;
-                            $ligne->chanant = $situAnc->personne;
-                            $ligne->radant = $situAnc->radiation;
-                            $ligne->cumulins =  $ligne->cumulins + $situAnc->localite;
-                            $ligne->cumulmod =  $ligne->cumulmod + $situAnc->operateur;
-                            $ligne->cumulchan =  $ligne->cumulchan + $situAnc->personne;
-                            $ligne->cumulrad =  $ligne->cumulrad + $situAnc->radiation;
-
-
-                        }
-
-                    }
-                    foreach ($situationSemaine as $keyss => $situSem) {
-                        if($situSem->nom==$commune->nom)
-                        {
-                            $ligne->inssem = $situSem->localite;
-                            $ligne->modsem = $situSem->operateur;
-                            $ligne->chansem = $situSem->personne;
-                            $ligne->radsem = $situSem->radiation;
-                            $ligne->cumulins =  $ligne->cumulins + $situSem->localite;
-                            $ligne->cumulmod =  $ligne->cumulmod + $situSem->operateur;
-                            $ligne->cumulchan =  $ligne->cumulchan + $situSem->personne;
-                            $ligne->cumulrad =  $ligne->cumulrad + $situSem->radiation;
-
-
-                        }
-
-                    }
-                   // $data[]=$ligne;
-                    $regions[$keyr]->departements[$keyd]->arrondissements[$keya]->communes[$keyc]->data = $ligne;
+                                 $regions[$keyr]->departements[$keyd]->arrondissements[$keya]->communes[$keyc]->data = "";
                 }
 
             }
@@ -437,8 +342,34 @@ class HomeController extends Controller
      }
 
 
+     $tabStats = $this->operateurRepository->sommeMontantParLocaliteDate($user,$request->start,$request->end);
         //dd($departement);
-        return view("situation.impression_national",compact("regions","semaine"));
+            foreach ($regions as $key => $region) {
+                foreach ($region->departements as $keyr => $departement) {
+
+                    foreach ($departement->arrondissements as $keya => $arrondissement) {
+                        foreach ($arrondissement->communes as $keyc => $commune) {
+                            foreach ($commune->localites as $keyl => $localite) {
+                                foreach ($tabStats as $keytab => $tabStat) {
+                                    if($tabStat->id == $localite->id)
+                                    {
+                                        $regions[$key]->departements[$keyr]->arrondissements[$keya]->communes[$keyc]->localites[$keyl]->{"montant"} = $tabStat->montant;
+                                        $tabStats[$keytab]->{"localite"} = $localite;
+                                        $tabStats[$keytab]->{"region"} = $region->nom;
+                                        $tabStats[$keytab]->{"departement"} = $departement->nom;
+                                          $tabStats[$keytab]->{"arrondissement"} = $arrondissement->nom;
+                                        $tabStats[$keytab]->{"commune"} = $commune->nom;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            $debut = $request->start;
+            $fin = $request->end;
+        return view("situation.impression_national",compact("regions","tabStats",
+    "debut","fin"));
 
     }
 

@@ -9,6 +9,7 @@ class Personne extends Model
 {
     use HasFactory;
      protected $fillable = [
-        'localite','nature','cause','prenom','nom','tel','cni','besoin','commentaire','commune_id'
+        'nature','cause','prenom','nom','tel','cni','besoin','commentaire','commune_id',
+        'localite_id','doc','genre','deces'
     ];
 }

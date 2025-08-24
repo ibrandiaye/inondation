@@ -63,7 +63,16 @@ class LocaliteController extends Controller
         }
         else
         {
+        if( $user->role=="sous_prefet")
+        {
             $communes = $this->communeRepository->getByArrondissement($user->arrondissement_id);
+
+        }
+        else if($user->role=="prefet" )
+        {
+            $communes = $this->communeRepository->getByDepartement($user->departement_id);
+
+        }
             //  dd(Auth::user()->arrondissement_id);
               return view('localite.add',compact('communes',));
         }
@@ -82,6 +91,15 @@ class LocaliteController extends Controller
             'commune_id' => 'required',
 
         ]);
+        if($request->document)
+        {
+            $this->validate($request, [
+                'document' => 'required|mimes:pdf,doc,docx',
+            ] );
+            $imageName = time().'.'.$request->document->extension();
+            $request->document->move(public_path('document'), $imageName);
+            $request->merge(['doc'=>$imageName]);
+        }
 
         $user = Auth::user();
         $localites = $this->localiteRepository->store($request->all());
@@ -112,9 +130,15 @@ class LocaliteController extends Controller
     public function edit($id)
     {
         $user = Auth::user();
-        if($user->role=="prefet" || $user->role=="sous_prefet")
+
+        if( $user->role=="sous_prefet")
         {
-            $communes = $this->communeRepository->getByArrondissement(Auth::user()->arrondissement_id);
+            $communes = $this->communeRepository->getByArrondissement($user->arrondissement_id);
+
+        }
+        else if($user->role=="prefet" )
+        {
+            $communes = $this->communeRepository->getByDepartement($user->departement_id);
 
         }
         else
@@ -134,6 +158,15 @@ class LocaliteController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if($request->document)
+        {
+            $this->validate($request, [
+                'document' => 'required|mimes:pdf,doc,docx',
+            ] );
+            $imageName = time().'.'.$request->document->extension();
+            $request->document->move(public_path('document'), $imageName);
+            $request->merge(['doc'=>$imageName]);
+        }
         $this->localiteRepository->update($id, $request->all());
         return redirect('localite');
     }

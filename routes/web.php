@@ -85,3 +85,16 @@ Route::get('/api/by/commune/{id}',[HomeController::class,'byCommune'])->name('rt
 
 Route::get('/api/by/arrondissement/{id}',[HomeController::class,'byArrondissement'])->name('rts.national.departement')->middleware("auth");
 Route::get('/api/by/region/{id}',[HomeController::class,'byRegion'])->name('rts.national.departement')->middleware("auth");
+
+
+Route::get('/ajouter/personne/{localite}',[PersonneController::class,'createWithLocalite'])->name('ajouter.personne')->middleware("auth");
+Route::get('/ajouter/operateur/{localite}',[OperateurController::class,'createWithLocalite'])->name('ajouter.operateur')->middleware("auth");
+
+
+Route::post('/message/arrondissement',[HomeController::class,'messageByArrondissement'])->name('message.arrondissement')->middleware("auth");
+
+Route::post('/message/departement',[HomeController::class,'messageByDepartement'])->name('message.departement')->middleware("auth");
+
+Route::post('/message/region',[HomeController::class,'messageByRegion'])->name('message.region')->middleware("auth");
+
+Route::post('/message/national',[HomeController::class,'messageByNational'])->name('message.national')->middleware("auth");

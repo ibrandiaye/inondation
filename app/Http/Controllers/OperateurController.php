@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\ArrondissementRepository;
 use App\Repositories\CommuneRepository;
+use App\Repositories\LocaliteRepository;
 use App\Repositories\OperateurRepository;
 use App\Repositories\RegionRepository;
 use Illuminate\Http\Request;
@@ -15,13 +16,16 @@ class OperateurController extends Controller
     protected $regionRepository;
     protected $operateurRepository;
     protected $arrondissementRepository;
+    protected $localiteRepository;
 
     public function __construct( CommuneRepository $communeRepository,RegionRepository $regionRepository,
-    OperateurRepository $operateurRepository,ArrondissementRepository $arrondissementRepository){
+    OperateurRepository $operateurRepository,ArrondissementRepository $arrondissementRepository,
+    LocaliteRepository $localiteRepository){
         $this->communeRepository = $communeRepository;
         $this->regionRepository = $regionRepository;
         $this->operateurRepository = $operateurRepository;
         $this->arrondissementRepository = $arrondissementRepository;
+        $this->localiteRepository = $localiteRepository;
     }
 
     /**
@@ -78,12 +82,23 @@ class OperateurController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+      /*   $this->validate($request, [
             'commune_id' => 'required',
 
-        ]);
+        ]); */
+        if($request->document)
+        {
+            $this->validate($request, [
+                'document' => 'required|mimes:pdf,doc,docx',
+            ] );
+            $imageName = time().'.'.$request->document->extension();
+            $request->document->move(public_path('document'), $imageName);
+            $request->merge(['doc'=>$imageName]);
+        }
 
         $user = Auth::user();
+        $localite = $this->localiteRepository->getOnlyById($request->localite_id);
+        $request->merge(['commune_id'=>$localite->commune_id]);
         $operateurs = $this->operateurRepository->store($request->all());
 
         return redirect('operateur');
@@ -112,9 +127,14 @@ class OperateurController extends Controller
     public function edit($id)
     {
         $user = Auth::user();
-        if($user->role=="prefet" || $user->role=="sous_prefet")
+        if( $user->role=="sous_prefet")
         {
-            $communes = $this->communeRepository->getByArrondissement(Auth::user()->arrondissement_id);
+            $communes = $this->communeRepository->getByArrondissement($user->arrondissement_id);
+
+        }
+        else if($user->role=="prefet" )
+        {
+            $communes = $this->communeRepository->getByDepartement($user->departement_id);
 
         }
         else
@@ -134,6 +154,15 @@ class OperateurController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if($request->document)
+        {
+            $this->validate($request, [
+                'document' => 'required|mimes:pdf,doc,docx',
+            ] );
+            $imageName = time().'.'.$request->document->extension();
+            $request->document->move(public_path('document'), $imageName);
+            $request->merge(['doc'=>$imageName]);
+        }
         $this->operateurRepository->update($id, $request->all());
         return redirect('operateur');
     }
@@ -154,4 +183,22 @@ class OperateurController extends Controller
         $operateurs = $this->operateurRepository->getByCommune($commune);
         return response()->json($operateurs);
     }
+
+     public function createWithLocalite($localite)
+     {
+        $user = Auth::user();
+        if($user->role=="correcteur" || $user->role=="admin" )
+        {
+            $regions = $this->regionRepository->getAllOnLy();
+            //  dd(Auth::user()->arrondissement_id);
+              return view('operateur.addc',compact('regions','localite'));
+        }
+        else
+        {
+            $communes = $this->communeRepository->getByArrondissement($user->arrondissement_id);
+            //  dd(Auth::user()->arrondissement_id);
+              return view('operateur.add',compact('communes','localite'));
+        }
+
+     }
 }

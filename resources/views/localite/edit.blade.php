@@ -56,7 +56,21 @@
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Nature du bien impacté</label>
-                                            <input type="text" name="nature"  value="{{ $localite->nature }}" class="form-control"  required>
+                                            <select id="nature" name="nature" class="form-control">
+                                                <option value="">-- Sélectionner --</option>
+                                                <option value="route" {{ $localite->nature == "route" ? 'selected' : '' }}>Route</option>
+                                                <option value="pont" {{ $localite->nature == "pont" ? 'selected' : '' }}>Pont</option>
+                                                <option value="ecole" {{ $localite->nature == "ecole" ? 'selected' : '' }}>École</option>
+                                                <option value="aeroport" {{ $localite->nature == "aeroport" ? 'selected' : '' }}>Aéroports</option>
+                                                <option value="sante" {{ $localite->nature == "sante" ? 'selected' : '' }}>Structures sanitaires</option>
+                                                <option value="culte" {{ $localite->nature == "culte" ? 'selected' : '' }}>Lieux de cultes</option>
+                                                <option value="habitation" {{ $localite->nature == "habitation" ? 'selected' : '' }}>Habitations</option>
+                                                <option value="jeux" {{ $localite->nature == "jeux" ? 'selected' : '' }}>Aires de jeux</option>
+                                                <option value="transport" {{ $localite->nature == "transport" ? 'selected' : '' }}>Transports</option>
+                                                <option value="agriculteur" {{ $localite->nature == "agriculteur" ? 'selected' : '' }}>Agriculteurs</option>
+                                                <option value="elevage" {{ $localite->nature == "elevage" ? 'selected' : '' }}>Élevages</option>
+                                                <option value="commerce" {{ $localite->nature == "commerce" ? 'selected' : '' }}>Commerces</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -95,7 +109,21 @@
                                             <input type="text" name="besoin"  value="{{ $localite->besoin }}" class="form-control"  required>
                                         </div>
                                     </div>
+                                     <div class="col-lg-6">
+                                        <label>Etat</label>
+                                        <select class="form-control" name="etat" id="etat" required="">
+                                           <option value="">Selectionnez</option>
+                                            <option value="sinistre" {{ old('etat'=='sinistre' ? 'selected' : '') }}>sinistre</option>
+                                            <option value="sinistre resolu" {{ old('etat'=='sinistre resolu' ? 'selected' : '') }}>sinistre resolu</option>
 
+                                        </select>
+                                    </div>
+                                     <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label> Document </label>
+                                            <input type="file" name="document"   class="form-control"  >
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
                                     <center>

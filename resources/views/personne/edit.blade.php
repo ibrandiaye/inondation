@@ -83,6 +83,24 @@
                                             <input type="text" name="tel"  value="{{ $personne->tel }}" class="form-control"  required>
                                         </div>
                                     </div>
+                                     <div class="col-lg-6">
+                                        <label>Sexe</label>
+                                        <select class="form-control" name="genre" id="genre" required="">
+                                           <option value="">Selectionnez</option>
+                                           <option value="homme"  {{ $personne->genre=="homme" ? 'selected' :'' }}>Homme</option>
+                                           <option value="femme" {{ $personne->genre=="femme" ? 'selected' :'' }}>Femme</option>
+
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label>Décès</label>
+                                        <select class="form-control" name="deces" id="deces" required="">
+                                           <option value="">Selectionnez</option>
+                                           <option value="oui" {{ $personne->deces=="oui" ? 'selected' :'' }}>Oui</option>
+                                           <option value="non" {{ $personne->deces=="non" ? 'selected' :'' }}>Non </option>
+
+                                        </select>
+                                    </div>
                                    <div class="col-lg-6">
                                         <div class="form-group">
                                             <label> N° CNI </label>
@@ -102,7 +120,12 @@
                                             <textarea class="form-control" name="commentaire" required> {{ $personne->commentaire}} </textarea>
                                         </div>
                                     </div>
-
+                                     <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label> Document </label>
+                                            <input type="file" name="document"   class="form-control"  >
+                                        </div>
+                                    </div>
                                 </div>
                                 <div>
                                     <center>

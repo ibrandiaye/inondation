@@ -34,10 +34,11 @@ class RegionRepository extends RessourceRepository{
 
        public function getALLWithRelation()
        {
-           return Region::with(["departements","departements.arrondissements","departements.arrondissements.communes"])
+           return Region::with(["departements","departements.arrondissements",
+           "departements.arrondissements.communes", "departements.arrondissements.communes.localites"])
            ->orderBy("nom")
            ->get();
        }
-       
+
 
 }
