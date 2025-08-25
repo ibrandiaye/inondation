@@ -77,7 +77,7 @@
                                 <th>Type de Dégât</th>
                                 <th>Mesure prise</th>
                                 <th>Mesure envisagé</th>
-                                <th>Coût des dégâts estimé en FCFA</th>
+                                <th>Coût des dégâts estimé en FCFA </th>
                             </tr>
                         </thead>
                         <tbody>
