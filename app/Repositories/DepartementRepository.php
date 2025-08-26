@@ -49,6 +49,41 @@ class DepartementRepository extends RessourceRepository{
         ->where("region_id",$id)
         ->get();
     }
+    public function getByIdWithRelation($id)
+    {
+        return Departement::with(["arrondissements","arrondissements.communes","arrondissements.communes.localites"])
+        ->where("region_id",$id)
+        ->get();
+    }
+    public function getByArrondissementdWithRelation($id)
+    {
+        return Departement::with(["arrondissements"=> function ($q) use ($id) {
+                    $q->where('id', $id);
+                },"arrondissements.communes","arrondissements.communes.localites"])
+       /* ->whereHas('arrondissements', function ($q) use ($id) {
+            $q->where('id', $id);
+        })*/
+        ->get();
+    }
+    public function getByDepartementWithRelation($id)
+    {
+        return Departement::with(["arrondissements","arrondissements.communes","arrondissements.communes.localites"])
+        ->where("id",$id)
+        ->get();
+    }
+    public function getByCommuneWithRelation($id)
+    {
+        return Departement::with([
+                'arrondissements',
+                'arrondissements.communes' => function ($q) use ($id) {
+                    $q->where('id', $id)->with('localites');
+                }
+            ])
+
+            ->get();
+    }
+
+
     public function getAllOnly(){
         return DB::table("departements")
         ->orderBy("nom","asc")

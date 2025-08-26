@@ -235,9 +235,17 @@ class HomeController extends Controller
         $user = Auth::user();
        // $communes = $this->communeRepository->getByArrondissement($user->arrondissement_id);
         $arrondissement = $this->arrondissementRepository->getOneArrondissementWithdepartementAndRegion($user->arrondissement_id);
-        $communes = $this->communeRepository->getByArrondissementWithRelation($user->arrondissement_id);
+        if(isset($request->commune_id))
+        {
+            $communes = $this->communeRepository->getByIdWithRelation($request->commune_id);
+        }
+        else
+        {
+            $communes = $this->communeRepository->getByArrondissementWithRelation($user->arrondissement_id);
+        }
         $tabStats=[];
         $tabStats = $this->operateurRepository->sommeMontantParLocaliteDate($user,$request->start,$request->end);
+        $data = [];
         foreach ($communes as $keyc => $commune) {
                 foreach ($commune->localites as $keyl => $localite) {
                     foreach ($tabStats as $keytab => $tabStat) {
@@ -250,11 +258,12 @@ class HomeController extends Controller
                     }
                 }
             }
+            //dd($data);
 
             $debut = $request->start;
             $fin = $request->end;
       return view("situation.impression_arrondissement",compact("tabStats","arrondissement",
-    "debut","fin"));
+    "debut","fin","communes"));
 
 
     }
@@ -263,7 +272,18 @@ class HomeController extends Controller
     {
          $user = Auth::user();
         $departement = $this->departementRepository->getOneWithRelation($user->departement_id);
+        if(isset($request->commune_id))
+        {
+            $arrondissements = $this->arrondissementRepository->getByCommuneWithRelation($request->commune_id);
+        }
+        else if(isset($request->arrondissement_id))
+        {
+            $arrondissements = $this->arrondissementRepository->getByIdWithRelation($request->arrondissement_id);
+        }
+        else
+        {
         $arrondissements = $this->arrondissementRepository->getByDepartementWithRelation($user->departement_id);
+        }
          $tabStats=[];
         $tabStats = $this->operateurRepository->sommeMontantParLocaliteDate($user,$request->start,$request->end);
         foreach ($arrondissements as $keya => $arrondissement) {
@@ -276,6 +296,8 @@ class HomeController extends Controller
                                 $tabStats[$keytab]->{"localite"} = $localite;
                                 $tabStats[$keytab]->{"arrondissement"} = $arrondissement->nom;
                                 $tabStats[$keytab]->{"commune"} = $commune->nom;
+                                 $arrondissements[$keya]->communes[$keyc]->localites[$keyl]->{"arrondissement"} = $arrondissement->nom;
+                                  $arrondissements[$keya]->communes[$keyc]->localites[$keyl]->{"montant"} ->{"commune"} = $commune->nom;
                             }
                         }
                     }
@@ -284,7 +306,7 @@ class HomeController extends Controller
              $debut = $request->start;
             $fin = $request->end;
         return view("situation.impression_departement",compact("departement","tabStats",
-    "debut","fin"));
+    "debut","fin","arrondissements"));
 
     }
 
@@ -292,9 +314,24 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $region = $this->regionRepository->getOneWithRelation($user->region_id);
+        if(isset($request->commune_id))
+        {
+            $departements = $this->departementRepository->getByCommuneWithRelation($request->commune_id);
+        }
+        else if(isset($request->arrondissement_id))
+        {
+            $departements = $this->departementRepository->getByArrondissementdWithRelation($request->arrondissement_id);
+        }
+        else if(isset($request->departement_id))
+        {
+            $departements = $this->departementRepository->getByDepartementWithRelation($request->departement_id);
+        }
+        else
+        {
+            $departements = $this->departementRepository->getByRegionWithRelation($user->region_id);
+        }
 
 
-        $departements = $this->departementRepository->getByRegionWithRelation($user->region_id);
          $tabStats=[];
         $tabStats = $this->operateurRepository->sommeMontantParLocaliteDate($user,$request->start,$request->end);
         foreach ($departements as $keyr => $departement) {
@@ -319,22 +356,41 @@ class HomeController extends Controller
          $debut = $request->start;
         $fin = $request->end;
         return view("situation.impression_region",compact("region","tabStats",
-    "debut","fin"));
+    "debut","fin","departements"));
 
     }
 
     public function messageByNational(Request $request)
     {
          $user = Auth::user();
-        $regions = $this->regionRepository->getALLWithRelation();
 
+         if(isset($request->commune_id))
+        {
+            $regions = $this->regionRepository->getByCommuneWithRelation($request->commune_id);
+        }
+        else if(isset($request->arrondissement_id))
+        {
+            $regions = $this->regionRepository->getByArrondissementWithRelation($request->arrondissement_id);
+        }
+        else if(isset($request->departement_id))
+        {
+            $regions = $this->regionRepository->getByDepartementWithRelation($request->departement_id);
+        }
+        else if(isset($request->region_id))
+        {
+            $regions = $this->regionRepository->getByRegionWithRelation($request->region_id);
+        }
+        else
+        {
+             $regions = $this->regionRepository->getALLWithRelation();
+        }
 
      //  dd($situationSemaine,$situationSemaine,$departement);
      foreach ($regions as $keyr => $region) {
         foreach ($region->departements as $keyd => $departement) {
             foreach ($departement->arrondissements as $keya => $arrondissement) {
                 foreach ($arrondissement->communes as $keyc => $commune) {
-                                 $regions[$keyr]->departements[$keyd]->arrondissements[$keya]->communes[$keyc]->data = "";
+                    $regions[$keyr]->departements[$keyd]->arrondissements[$keya]->communes[$keyc]->data = "";
                 }
 
             }
@@ -395,6 +451,49 @@ class HomeController extends Controller
             }
         }
         return view("situation.impression_departement_1",compact("depts","situationPasDepartements"));
+    }
+
+    public function rapport()
+    {
+         $regions =[];
+        $departements =[];
+        $arrondissements =[];
+        $communes =[];
+        $user = Auth::user();
+
+        if($user->role=="admin" )
+        {
+            $regions = $this->regionRepository->getALLWithRelation();
+
+        }
+        else if($user->role=="gouverneur")
+        {
+            $departements = $this->departementRepository->getByRegionWithRelation($user->region_id);
+
+        }
+        else if($user->role=="prefet")
+        {
+            $arrondissements = $this->arrondissementRepository->getByDepartementWithRelation($user->departement_id);
+
+        }
+        else if($user->role=="sous_prefet")
+        {
+            $communes = $this->communeRepository->getByArrondissementWithRelation($user->arrondissement_id);
+
+        }
+        if($user->role=="admin" )
+        {
+            $depts = $this->departementRepository->getAllOnlyOrderByRegion();
+        }
+        else
+        {
+           $situationPasDepartements=[];
+           $depts=[];
+        }
+       //dd($tabStats);
+
+        return view('rapport',compact("regions",
+    "departements","arrondissements","communes"));
     }
 }
 

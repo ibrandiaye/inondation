@@ -30,6 +30,20 @@ class ArrondissementRepository extends RessourceRepository{
         ->where('departement_id',$departement)
         ->get();
     }
+
+     public function getByIdWithRelation($arrondissement){
+        return Arrondissement::with(['communes','communes.localites'])
+        ->where('id',$arrondissement)
+        ->get();
+    }
+    public function getByCommuneWithRelation($id)
+{
+    return Arrondissement::with(['communes' => function ($q) use ($id) {
+                    $q->where('id', $id)->with('localites');
+                }])
+
+        ->get();
+}
 public function getByRegion($region){
     return DB::table("arrondissements")
     ->join("departements","arrondissements.departement_id","=","departements.id")

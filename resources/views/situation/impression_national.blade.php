@@ -82,19 +82,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach ($tabStats as $key=> $tabStat)
-                            <tr>
-                                <td>{{ $tabStat->region }}</td>
-                                <td>{{ $tabStat->departement }}</td>
-                                <td>{{ $tabStat->arrondissement }}</td>
-                                <td>{{ $tabStat->commune }}</td>
-                                <td>{{ $tabStat->localite->localite }}</td>
-                                <td>{{ $tabStat->localite->nature }}</td>
-                                <td>{{ $tabStat->localite->mesure }}</td>
-                                <td>{{ $tabStat->localite->mesureen }}</td>
-                                <td>{{ $tabStat->montant }}</td>
+                            @foreach ($regions as $key=> $region)
+                                @foreach ($region->departements as $key=> $departement)
+                                    @foreach ($departement->arrondissements as $arrondissement)
+                                        @foreach ($arrondissement->communes as $key=> $commune)
+                                            @foreach ($commune->localites as $tabStat)
+                                                <tr>
+                                                    <td>{{ $region->nom }}</td>
+                                                    <td>{{ $departement->nom }}</td>
+                                                    <td>{{ $arrondissement->nom }}</td>
+                                                    <td>{{ $commune->nom }}</td>
+                                                    <td>{{ $tabStat->localite }}</td>
+                                                    <td>{{ $tabStat->nature }}</td>
+                                                    <td>{{ $tabStat->mesure }}</td>
+                                                    <td>{{ $tabStat->mesureen }}</td>
+                                                    <td>{{ $tabStat->montant }}</td>
 
-                            </tr>
+                                                </tr>
+                                            @endforeach
+                                        @endforeach
+                                    @endforeach
+                                @endforeach
                             @endforeach
 
                         </tbody>

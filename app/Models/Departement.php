@@ -20,4 +20,8 @@ class Departement extends Model
     {
         return $this->hasMany(Arrondissement::class);
     }
+    public function communes()
+    {
+        return $this->hasMany(Commune::class);
+    }
 }

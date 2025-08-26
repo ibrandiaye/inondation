@@ -98,3 +98,5 @@ Route::post('/message/departement',[HomeController::class,'messageByDepartement'
 Route::post('/message/region',[HomeController::class,'messageByRegion'])->name('message.region')->middleware("auth");
 
 Route::post('/message/national',[HomeController::class,'messageByNational'])->name('message.national')->middleware("auth");
+
+Route::get('/rapport',[HomeController::class,'rapport'])->name('rapport')->middleware("auth");

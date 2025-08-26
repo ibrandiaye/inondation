@@ -158,9 +158,9 @@
                                 </a>
 
                             </li>
-
+                            {{-- data-toggle="modal" data-target="#exampleModalform2date" --}}
                              <li>
-                                <a data-toggle="modal" data-target="#exampleModalform2date"  class="waves-effect waves-light">
+                                <a href="{{ route('rapport') }}"   class="waves-effect waves-light">
                                     <i class="mdi mdi-gauge"></i>
                                     <span> Rapport </span>
                                 </a>
@@ -217,7 +217,7 @@
                             </li>
                              <li>
                                 <a href="javascript: void(0);" class="waves-effect waves-light">
-                                    <i class="mdi mdi-user"></i>
+                                    <i class="mdi mdi-acount"></i>
                                     <span> Utilisateur </span>
                                     <span class="menu-arrow"></span>
                                 </a>

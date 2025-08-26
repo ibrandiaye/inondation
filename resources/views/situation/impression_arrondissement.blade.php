@@ -81,18 +81,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach ($tabStats as $key=> $tabStat)
-                        <tr>
+                    @foreach ($communes as $key=> $commune)
+                        @foreach ($commune->localites as $tabStat)
+                            <tr>
 
-                            <td>{{ $tabStat->commune }}</td>
-                            <td>{{ $tabStat->localite->localite }}</td>
-                            <td>{{ $tabStat->localite->nature }}</td>
-                            <td>{{ $tabStat->localite->mesure }}</td>
-                            <td>{{ $tabStat->localite->mesureen }}</td>
+                            <td>{{ $tabStat->commune->nom }}</td>
+                            <td>{{ $tabStat->localite }}</td>
+                            <td>{{ $tabStat->nature }}</td>
+                            <td>{{ $tabStat->mesure }}</td>
+                            <td>{{ $tabStat->mesureen }}</td>
                             <td>{{ $tabStat->montant }}</td>
 
                         </tr>
                         @endforeach
+
+                    @endforeach
 
                     </tbody>
         </table>
