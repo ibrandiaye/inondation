@@ -52,8 +52,8 @@ class LocaliteRepository extends RessourceRepository{
     }
 
 
-     public function countLocalite(){
-         $user = Auth::user();
+     public function countLocalite($user){
+
         if($user->role=="admin" || $user->role=='superviseur' || $user->role=='correcteur')
         {
             return  DB::table("localites")
@@ -126,7 +126,7 @@ class LocaliteRepository extends RessourceRepository{
     }
 
 
- public function countLocaliteNonSinistre(){
+ public function countLocaliteNonSinistre($user){
          $user = Auth::user();
         if($user->role=="admin" || $user->role=='superviseur' || $user->role=='correcteur')
         {

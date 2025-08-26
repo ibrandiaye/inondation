@@ -58,8 +58,8 @@ class PersonneRepository extends RessourceRepository{
 
     }
 
-     public function countPersonne(){
-         $user = Auth::user();
+     public function countPersonne($user){
+
         if($user->role=="admin" || $user->role=='superviseur' || $user->role=='correcteur')
         {
             return  DB::table("personnes")
@@ -123,6 +123,38 @@ class PersonneRepository extends RessourceRepository{
         ->where("commune_id",$id)
         ->count();
 
+    }
+
+    public function countPersonneDecede($user){
+
+        if($user->role=="admin" || $user->role=='superviseur' || $user->role=='correcteur')
+        {
+            return  DB::table("personnes")
+            ->where("deces", "oui")
+            ->count();
+        }
+        elseif ($user->role=="sous_prefet") {
+            return  DB::table("personnes")
+            ->join("communes","personnes.commune_id","=","communes.id")
+            ->where("deces", "oui")
+            ->where("communes.arrondissement_id",$user->arrondissement_id)
+            ->count();
+        }
+        elseif ($user->role=="prefet") {
+            return  DB::table("personnes")
+            ->join("communes","personnes.commune_id","=","communes.id")
+            ->where("deces", "oui")
+            ->where("communes.departement_id",$user->departement_id)
+            ->count();
+        }
+        elseif ($user->role=="gouverneur") {
+            return  DB::table("personnes")
+            ->join("communes","personnes.commune_id","=","communes.id")
+            ->join("departements","communes.departement_id","=","departements.id")
+            ->where("deces", "oui")
+            ->where("departements.region_id",$user->region_id)
+            ->count();
+        }
     }
 
 

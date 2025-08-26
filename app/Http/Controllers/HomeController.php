@@ -6,6 +6,7 @@ use App\Repositories\ArrondissementRepository;
 use App\Repositories\CommuneRepository;
 use App\Repositories\ComptageRepository;
 use App\Repositories\DepartementRepository;
+use App\Repositories\DonRepository;
 use App\Repositories\LocaliteRepository;
 use App\Repositories\OperateurRepository;
 use App\Repositories\PersonneRepository;
@@ -30,10 +31,12 @@ class HomeController extends Controller
     protected $operateurRepository;
     protected $localiteRepository;
     protected $personneRepository;
+    protected $donRepository;
 
     public function __construct(RegionRepository $regionRepository,CommuneRepository $communeRepository,
     DepartementRepository $departementRepository,ArrondissementRepository $arrondissementRepository,
-    OperateurRepository $operateurRepository,LocaliteRepository $localiteRepository,PersonneRepository $personneRepository)
+    OperateurRepository $operateurRepository,LocaliteRepository $localiteRepository,PersonneRepository $personneRepository,
+    DonRepository $donRepository)
     {
         $this->middleware('auth');
         $this->regionRepository = $regionRepository;
@@ -43,6 +46,7 @@ class HomeController extends Controller
         $this->operateurRepository = $operateurRepository;
         $this->localiteRepository = $localiteRepository;
         $this->personneRepository = $personneRepository;
+        $this->donRepository = $donRepository;
     }
 
     /**
@@ -58,17 +62,18 @@ class HomeController extends Controller
         $communes =[];
         $tabStats = [];
         $user = Auth::user();
-        $nbLocalite = $this->localiteRepository->countLocalite();
-        $nbOperateur = $this->operateurRepository->countOperateur();
-        $nbPersonne = $this->personneRepository->countPersonne();
-        $nonSinistre = $this->localiteRepository->countLocaliteNonSinistre();
-        $sommeCout = $this->operateurRepository->sommeCout();
-
-        $sommeByLocalite = $this->operateurRepository->sommeMontantParLocalite();
+        $nbLocalite = $this->localiteRepository->countLocalite($user);
+        $nbOperateur = $this->operateurRepository->countOperateur($user);
+        $nbPersonne = $this->personneRepository->countPersonne($user);
+        $nonSinistre = $this->localiteRepository->countLocaliteNonSinistre($user);
+        $sommeCout = $this->operateurRepository->sommeCout($user);
+        $nbDece = $this->personneRepository->countPersonneDecede($user);
+        $sommeByLocalite = $this->operateurRepository->sommeMontantParLocalite($user);
         //dd($sommeByLocalite);
-        $tabStats = $this->operateurRepository->sommeMontantParLocalite();
+        $tabStats = $this->operateurRepository->sommeMontantParLocalite($user);
+        $sommeDon = $this->donRepository->sommeDon($user);
 
-        if($user->role=="admin" )
+        if($user->role=="admin" || $user->role=="superviseur" )
         {
             $regions = $this->regionRepository->getALLWithRelation();
             foreach ($regions as $key => $region) {
@@ -154,7 +159,7 @@ class HomeController extends Controller
                 }
 
         }
-        if($user->role=="admin" )
+        if($user->role=="admin" || $user->role=="superviseur")
         {
             $depts = $this->departementRepository->getAllOnlyOrderByRegion();
         }
@@ -167,7 +172,8 @@ class HomeController extends Controller
 
         return view('home',compact("regions",
     "departements","arrondissements","communes","nbLocalite"
-        ,"nbOperateur","nbPersonne","sommeCout","tabStats","nonSinistre"));
+        ,"nbOperateur","nbPersonne","sommeCout","tabStats","nonSinistre","nbDece",
+    "sommeDon"));
     }
 
     public function statByCommune($commune)

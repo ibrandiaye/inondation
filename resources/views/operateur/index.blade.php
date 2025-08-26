@@ -33,7 +33,7 @@
     <div class="card ">
         <div class="card-header  text-center">LISTE D'ENREGISTREMENT DES OPERATEURS
              <div class="float-right">
-                <a href="{{ route('operateur.create') }}" class="btn btn-primary">Ajouter un opérateur</a>
+                @if(Auth::user()->role!="superviseur") <a href="{{ route('operateur.create') }}" class="btn btn-primary">Ajouter un opérateur</a>@endif
             </div>
         </div>
             <div class="card-body">

@@ -15,7 +15,7 @@
 </div>
 
 <div class="row">
-    <div class="col-xl-4 col-md-6">
+    <div class="col-xl-3 col-md-6">
         <div class="card widget-box-one border border-warning bg-soft-warning">
             <div class="card-body">
                 <div class="float-right avatar-lg rounded-circle mt-3">
@@ -29,25 +29,25 @@
         </div>
     </div>
     <!-- end col -->
-    <div class="col-xl-4 col-md-6">
-        <div class="card widget-box-one border border-success bg-soft-success">
+    <div class="col-xl-3 col-md-6">
+        <div class="card widget-box-one border border-danger bg-soft-danger">
             <div class="card-body">
                 <div class="float-right avatar-lg rounded-circle mt-3">
-                    <i class="mdi mdi-account-edit font-30 widget-icon rounded-circle avatar-title text-success"></i>
+                    <i class="mdi mdi-account-edit font-30 widget-icon rounded-circle avatar-title text-danger"></i>
                 </div>
                 <div class="wigdet-one-content">
                     <p class="m-0 text-uppercase font-weight-bold text-muted" title="User This Month">Localite Sinistre</p>
-                    <h2><span data-plugin="counterup" id="sinistre">{{ $nbLocalite -  $nonSinistre}} </span> <i class="mdi mdi-arrow-collapse text-success font-24"></i></h2>
+                    <h2><span data-plugin="counterup" id="sinistre">{{ $nbLocalite -  $nonSinistre}} </span> <i class="mdi mdi-arrow-collapse text-danger font-24"></i></h2>
                 </div>
             </div>
         </div>
     </div>
     <!-- end col -->
-    <div class="col-xl-4 col-md-6">
-        <div class="card widget-box-one border border-danger bg-soft-danger">
+    <div class="col-xl-3 col-md-6">
+        <div class="card widget-box-one border border-success bg-soft-success">
             <div class="card-body">
                 <div class="float-right avatar-lg rounded-circle mt-3">
-                    <i class="mdi mdi-account-switch font-30 widget-icon rounded-circle avatar-title text-danger"></i>
+                    <i class="mdi mdi-account-switch font-30 widget-icon rounded-circle avatar-title text-success"></i>
                 </div>
                 <div class="wigdet-one-content">
                     <p class="m-0 text-uppercase font-weight-bold text-muted" title="Statistics">Sinistre Résolu</p>
@@ -56,10 +56,24 @@
             </div>
         </div>
     </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card widget-box-one border border-info bg-soft-info">
+            <div class="card-body">
+                <div class="float-right avatar-lg rounded-circle mt-3">
+                    <i class="mdi mdi-cash font-30 widget-icon rounded-circle avatar-title text-info"></i>
+                </div>
+                <div class="wigdet-one-content">
+                    <p class="m-0 text-uppercase font-weight-bold text-muted" title="Statistics">Montant des Dons FCFA</p>
+                    <h2><span data-plugin="counterup" id="montant">{{  $sommeDon}}</span> </h2>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- end col -->
 
 
-    <div class="col-xl-4 col-md-6">
+    <div class="col-xl-3 col-md-6">
         <div class="card widget-box-one border border-warning bg-soft-warning">
             <div class="card-body">
                 <div class="float-right avatar-lg rounded-circle mt-3">
@@ -73,7 +87,7 @@
         </div>
     </div>
     <!-- end col -->
-    <div class="col-xl-4 col-md-6">
+    <div class="col-xl-3 col-md-6">
         <div class="card widget-box-one border border-primary bg-soft-primary">
             <div class="card-body">
                 <div class="float-right avatar-lg rounded-circle mt-3">
@@ -86,13 +100,27 @@
             </div>
         </div>
     </div>
-    <!-- end col -->
 
- <div class="col-xl-4 col-md-6">
+    <div class="col-xl-3 col-md-6">
         <div class="card widget-box-one border border-danger bg-soft-danger">
             <div class="card-body">
                 <div class="float-right avatar-lg rounded-circle mt-3">
                     <i class="mdi mdi-cash font-30 widget-icon rounded-circle avatar-title text-danger"></i>
+                </div>
+                <div class="wigdet-one-content">
+                    <p class="m-0 text-uppercase font-weight-bold text-muted" title="Statistics">Nombre de  décès</p>
+                    <h2><span data-plugin="counterup" id="montant">{{  $nbDece}}</span> </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end col -->
+
+ <div class="col-xl-3 col-md-6">
+        <div class="card widget-box-one border border-info bg-soft-info">
+            <div class="card-body">
+                <div class="float-right avatar-lg rounded-circle mt-3">
+                    <i class="mdi mdi-cash font-30 widget-icon rounded-circle avatar-title text-info"></i>
                 </div>
                 <div class="wigdet-one-content">
                     <p class="m-0 text-uppercase font-weight-bold text-muted" title="Statistics">Coût des dégâts estimé en FCFA</p>

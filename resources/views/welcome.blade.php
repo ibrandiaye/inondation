@@ -158,6 +158,13 @@
                                 </a>
 
                             </li>
+                             <li>
+                                <a href="{{ route('don.index') }}" class="waves-effect waves-light">
+                                    <i class="mdi mdi-gauge"></i>
+                                    <span> Dons </span>
+                                </a>
+
+                            </li>
                             {{-- data-toggle="modal" data-target="#exampleModalform2date" --}}
                              <li>
                                 <a href="{{ route('rapport') }}"   class="waves-effect waves-light">
@@ -222,8 +229,8 @@
                                     <span class="menu-arrow"></span>
                                 </a>
                                 <ul class="nav-second-level" aria-expanded="false">
-                                    <li><a href="{{ route('user.create') }}">Ajouter Commune</a></li>
-                                    <li><a href="{{ route('user.index') }}">Liste des Commune</a></li>
+                                    <li><a href="{{ route('user.create') }}">Ajouter utilisateur</a></li>
+                                    <li><a href="{{ route('user.index') }}">Liste des utilisateurs</a></li>
                                 </ul>
                             </li>
 

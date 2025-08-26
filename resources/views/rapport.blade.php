@@ -25,7 +25,7 @@
         <div class="card-header">
         </div>
         <div class="card-body">
-            @if ($user->role=="admin")
+            @if ($user->role=="admin" || $user->role=="superviseur" )
                 <form action="{{ route('message.national') }}" method="POST">
             @elseif($user->role=="gouverneur")
                 <form action="{{ route('message.region') }}" method="POST">

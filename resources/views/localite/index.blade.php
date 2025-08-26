@@ -33,7 +33,7 @@
     <div class="card ">
         <div class="card-header  text-center">LISTE D'ENREGISTREMENT DES LOCALITES
              <div class="float-right">
-                <a href="{{ route('localite.create') }}" class="btn btn-primary">Ajouter une localité</a>
+              @if(Auth::user()->role!="superviseur")  <a href="{{ route('localite.create') }}" class="btn btn-primary">Ajouter une localité</a>@endif
             </div>
         </div>
             <div class="card-body">
@@ -63,14 +63,14 @@
                         <tr>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <a class="btn btn-outline-primary btn-sm" title="Ajouter une personne"
+                                   @if(Auth::user()->role!="superviseur")  <a class="btn btn-outline-primary btn-sm" title="Ajouter une personne"
                                     href="{{ route('ajouter.personne', ['localite'=>$localite->id]) }}">
                                         <i class="fas fa-user-plus"></i>
                                     </a>
                                     <a class="btn btn-outline-primary btn-sm" title="Ajouter un opérateur"
                                     href="{{ route('ajouter.operateur', ['localite'=>$localite->id]) }}">
                                         <i class="fas fa-user-cog"></i>
-                                    </a>
+                                    </a>@endif
                                 </div>
                             </td>
                             <td>{{ $localite->region }}</td>

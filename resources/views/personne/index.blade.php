@@ -33,7 +33,7 @@
     <div class="card ">
         <div class="card-header  text-center">LISTE D'ENREGISTREMENT DES PERSONNES
              <div class="float-right">
-                <a href="{{ route('personne.create') }}" class="btn btn-primary">Ajouter une personne</a>
+                @if(Auth::user()->role!="superviseur") <a href="{{ route('personne.create') }}" class="btn btn-primary">Ajouter une personne</a> @endif
             </div>
         </div>
             <div class="card-body">

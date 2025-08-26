@@ -65,8 +65,8 @@ class OperateurRepository extends RessourceRepository{
     }
 
 
-    public function countOperateur(){
-         $user = Auth::user();
+    public function countOperateur($user){
+
         if($user->role=="admin" || $user->role=='superviseur' || $user->role=='correcteur')
         {
             return  DB::table("operateurs")
@@ -94,8 +94,8 @@ class OperateurRepository extends RessourceRepository{
         }
     }
 
-    public function sommeCout(){
-         $user = Auth::user();
+    public function sommeCout($user){
+
         if($user->role=="admin" || $user->role=='superviseur' || $user->role=='correcteur')
         {
             return  DB::table("operateurs")
@@ -199,9 +199,9 @@ class OperateurRepository extends RessourceRepository{
 
     }
 
-public function sommeMontantParLocalite()
+public function sommeMontantParLocalite($user)
     {
-         $user = Auth::user();
+
 
 
          if($user->role=="admin" || $user->role=='superviseur' || $user->role=='correcteur')

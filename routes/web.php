@@ -3,6 +3,7 @@
 use App\Http\Controllers\ArrondissementController;
 use App\Http\Controllers\CommuneController;
 use App\Http\Controllers\DepartementController;
+use App\Http\Controllers\DonController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaliteController;
 use App\Http\Controllers\OperateurController;
@@ -35,6 +36,8 @@ Route::resource('user', UserController::class)->middleware(['auth','admin']);
 Route::resource('operateur', OperateurController::class)->middleware(['auth']);
 Route::resource('personne', PersonneController::class)->middleware(['auth']);
 Route::resource('localite', LocaliteController::class)->middleware(['auth']);
+Route::resource('don', DonController::class)->middleware(['auth']);
+
 
 Route::get('/modifier/motdepasse',[UserController::class,'modifierMotDePasse'])->name("modifier.motdepasse")->middleware(['auth']);
 Route::post('/importer/region',[RegionController::class,'importExcel'])->name("importer.region")->middleware(['auth']);//->middleware(['auth', 'admin', 'checkMaxSessions']);

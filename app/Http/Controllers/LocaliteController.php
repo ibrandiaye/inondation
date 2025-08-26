@@ -15,6 +15,7 @@ class LocaliteController extends Controller
     protected $regionRepository;
     protected $localiteRepository;
     protected $arrondissementRepository;
+    protected $user;
 
     public function __construct( CommuneRepository $communeRepository,RegionRepository $regionRepository,
     LocaliteRepository $localiteRepository,ArrondissementRepository $arrondissementRepository){
@@ -22,6 +23,7 @@ class LocaliteController extends Controller
         $this->regionRepository = $regionRepository;
         $this->localiteRepository = $localiteRepository;
         $this->arrondissementRepository = $arrondissementRepository;
+        $this->user = Auth::user();
     }
 
     /**
