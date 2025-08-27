@@ -65,7 +65,7 @@
                 </div>
                 <div class="wigdet-one-content">
                     <p class="m-0 text-uppercase font-weight-bold text-muted" title="Statistics">Montant des Dons FCFA</p>
-                    <h2><span data-plugin="counterup" id="montant">{{  $sommeDon}}</span> </h2>
+                    <h2><span data-plugin="counterup" id="don">{{  $sommeDon}}</span> </h2>
                 </div>
             </div>
         </div>
@@ -109,7 +109,7 @@
                 </div>
                 <div class="wigdet-one-content">
                     <p class="m-0 text-uppercase font-weight-bold text-muted" title="Statistics">Nombre de  décès</p>
-                    <h2><span data-plugin="counterup" id="montant">{{  $nbDece}}</span> </h2>
+                    <h2><span data-plugin="counterup" id="dece">{{  $nbDece}}</span> </h2>
                 </div>
             </div>
         </div>
@@ -269,6 +269,8 @@
     montant = 0;
     sinistre = 0;
     nonsinistre = 0;
+    don = 0;
+    dece = 0;
     let chart;
     let myChartbar;
     $(document).ready(function() {
@@ -288,6 +290,8 @@
         $("#montant").empty();
         $("#sinistre").empty();
         $("#nonsinistre").empty();
+        $("#don").empty();
+        $("#dece").empty();
         montant
         localite = 0;
         operateur = 0;
@@ -322,6 +326,8 @@
                 $("#montant").append(data.sommeCout);
                  $("#sinistre").append(data.localite - data.nonSinistre);
                 $("#nonsinistre").append(data.nonSinistre);
+                $("#don").append(data.don);
+                $("#dece").append(data.dece);
 
                 localite = data.localite;
                 operateur = data.operateur;
@@ -348,6 +354,8 @@
         $("#montant").empty();
         $("#sinistre").empty();
         $("#nonsinistre").empty();
+        $("#don").empty();
+        $("#dece").empty();
 
         localite = 0;
         operateur = 0;
@@ -402,6 +410,8 @@
                  $("#montant").append(data.sommeCout);
                  $("#sinistre").append(data.localite - data.nonSinistre);
                 $("#nonsinistre").append(data.nonSinistre);
+                 $("#don").append(data.don);
+                $("#dece").append(data.dece);
 
 
                 localite = data.localite;
@@ -425,6 +435,8 @@
         $("#montant").empty();
          $("#sinistre").empty();
         $("#nonsinistre").empty();
+        $("#don").empty();
+        $("#dece").empty();
 
         localite = 0;
         operateur = 0;
@@ -464,6 +476,8 @@
                 $("#montant").append(data.sommeCout);
                 $("#sinistre").append(data.localite - data.nonSinistre);
                 $("#nonsinistre").append(data.nonSinistre);
+                 $("#don").append(data.don);
+                $("#dece").append(data.dece);
 
                 localite = data.localite;
                 operateur = data.operateur;
@@ -492,6 +506,8 @@
         $("#montant").empty();
          $("#sinistre").empty();
         $("#nonsinistre").empty();
+        $("#don").empty();
+        $("#dece").empty();
 
         localite = 0;
         operateur = 0;
@@ -510,6 +526,8 @@
                 $("#montant").append(data.sommeCout);
                 $("#sinistre").append(data.localite - data.nonSinistre);
                 $("#nonsinistre").append(data.nonSinistre);
+                 $("#don").append(data.don);
+                $("#dece").append(data.dece);
 
                 localite = data.localite;
                 operateur = data.operateur;

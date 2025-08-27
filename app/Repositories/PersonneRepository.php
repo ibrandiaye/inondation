@@ -157,5 +157,46 @@ class PersonneRepository extends RessourceRepository{
         }
     }
 
+    public function countDeceByRegion($id){
+
+        return  DB::table("personnes")
+        ->join("communes","personnes.commune_id","=","communes.id")
+        ->join('departements',"communes.departement_id","=","departements.id")
+        ->where("departements.region_id",$id)
+         ->where("deces", "oui")
+        ->count();
+
+    }
+     public function countDeceByDepartement($id){
+
+            return  DB::table("personnes")
+            ->join("communes","personnes.commune_id","=","communes.id")
+            ->where("communes.departement_id",$id)
+             ->where("deces", "oui")
+            ->count();
+
+
+    }
+
+     public function countDeceByArrondissement($id){
+        return  DB::table("personnes")
+        ->join("communes","personnes.commune_id","=","communes.id")
+
+        ->where("communes.arrondissement_id",$id)
+         ->where("deces", "oui")
+        ->count();
+
+
+    }
+    public function countDeceByCommune($id){
+
+        return  DB::table("personnes")
+        ->where("commune_id",$id)
+         ->where("deces", "oui")
+        ->count();
+
+    }
+
+
 
 }

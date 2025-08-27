@@ -190,8 +190,11 @@ class HomeController extends Controller
         $personne = $this->personneRepository->countByRegion($id);
         $sommeCout = $this->operateurRepository->sommeCoutRegion($id);
         $nonSinistre = $this->localiteRepository->countByRegionNonSinistre($id);
+        $don = $this->donRepository->sommeDonByRegion($id);
+        $dece = $this->personneRepository->countDeceByRegion($id);
         $data = array('localite'=>$localite,'operateur'=>$operateur,
-        'sommeCout'=>$sommeCout,'personne'=>$personne,'nonSinistre'=>$nonSinistre);
+        'sommeCout'=>$sommeCout,'personne'=>$personne,'nonSinistre'=>$nonSinistre,
+    'don'=>$don,'dece'=>$dece);
         return response()->json($data);
 
     }
@@ -203,8 +206,11 @@ class HomeController extends Controller
         $personne = $this->personneRepository->countByDepartement($id);
          $sommeCout = $this->operateurRepository->sommeCoutDepartement($id);
          $nonSinistre = $this->localiteRepository->countByDepartementNonSinistre($id);
+         $don = $this->donRepository->sommeDonByDepartement($id);
+        $dece = $this->personneRepository->countDeceByDepartement($id);
         $data = array('localite'=>$localite,'operateur'=>$operateur,
-        'sommeCout'=>$sommeCout,'personne'=>$personne,'nonSinistre'=>$nonSinistre);
+        'sommeCout'=>$sommeCout,'personne'=>$personne,'nonSinistre'=>$nonSinistre,
+        'don'=>$don,'dece'=>$dece);
         return response()->json($data);
 
     }
@@ -216,8 +222,11 @@ class HomeController extends Controller
         $personne = $this->personneRepository->countByArrondissement($id);
         $sommeCout = $this->operateurRepository->sommeCoutArrondissement($id);
         $nonSinistre = $this->localiteRepository->countByArrondissementNonSinistre($id);
+        $don = $this->donRepository->sommeDonByArrondissement($id);
+        $dece = $this->personneRepository->countDeceByArrondissement($id);
         $data = array('localite'=>$localite,'operateur'=>$operateur,'personne'=>$personne,
-        'sommeCout'=>$sommeCout,'nonSinistre'=>$nonSinistre);
+        'sommeCout'=>$sommeCout,'nonSinistre'=>$nonSinistre,
+        'don'=>$don,'dece'=>$dece);
         return response()->json($data);
 
     }
@@ -229,8 +238,11 @@ class HomeController extends Controller
         $personne = $this->personneRepository->countByCommune($id);
         $sommeCout = $this->operateurRepository->sommeCoutCommune($id);
         $nonSinistre = $this->localiteRepository->countByCommuneNonSinistre($id);
+        $don = 0;
+        $dece = $this->personneRepository->countDeceByCommune($id);
         $data = array('localite'=>$localite,'operateur'=>$operateur,'personne'=>$personne,
-    'sommeCout'=>$sommeCout,'nonSinistre'=>$nonSinistre);
+        'sommeCout'=>$sommeCout,'nonSinistre'=>$nonSinistre,
+        'don'=>$don,'dece'=>$dece);
         return response()->json($data);
 
 

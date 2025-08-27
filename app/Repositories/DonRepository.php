@@ -53,10 +53,39 @@ class DonRepository extends RessourceRepository{
         }
         elseif ($user->role=="gouverneur") {
             return  DB::table("dons")
-            ->join("regions","dons.commune_id","=","communes.id")
+            ->join("regions","dons.region_id","=","regions.id")
 
-            ->where("departements.region_id",$user->region_id)
+            ->where("regions.id",$user->region_id)
             ->sum("dons.valeur");
         }
     }
+
+     public function sommeDonByRegion($id){
+
+      return  DB::table("dons")
+            ->join("regions","dons.region_id","=","regions.id")
+
+            ->where("regions.id",$id)
+            ->sum("dons.valeur");
+
+    }
+     public function sommeDonByDepartement($id){
+
+             return  DB::table("dons")
+            ->join("departements","dons.departement_id","=","departements.id")
+            ->where("dons.departement_id",$id)
+            ->sum("dons.valeur");
+
+
+    }
+
+     public function sommeDonByArrondissement($id){
+         return  DB::table("dons")
+            ->join("arrondissements","dons.arrondissement_id","=","arrondissements.id")
+            ->where("dons.arrondissement_id",$id)
+            ->sum("dons.valeur");
+
+
+    }
+
 }
